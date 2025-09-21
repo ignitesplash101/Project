@@ -1,4 +1,4 @@
-﻿# Sendai Land & Mobility API Field Guide
+# Sendai Land & Mobility API Field Guide
 
 ## 1. Project Narrative
 - Build a replicable Sendai-focused analytics workflow that blends land market activity with everyday mobility context.
@@ -220,17 +220,16 @@ def fetch_appraisal_records(year: int, pref_code: str, *,
 **Response excerpt**
 ```json
 {
+  "価格時点": "2024",
+  "標準地番号 市区町村コード 県コード": "4",
+  "標準地番号 市区町村コード 市区町村コード": "101",
   "標準地番号 地域名": "仙台青葉",
   "標準地番号 用途区分": "住宅地",
-  "標準地 所在地 所在地番": "土樋１丁目１８５番１",
-  "標準地 所在地 住居表示": "土樋１－９－１４",
-  "標準地 地積 地積": "948",
-  "1㎡当たりの価格": "318000",
-  "標準地 周辺の利用状況": "マンション、一般住宅等が混在する住宅地域",
-  "標準地 供給処理施設 水道": "1",
-  "標準地 供給処理施設 ガス": "1",
-  "標準地 交通施設の状況 交通施設": "愛宕橋",
-  "標準地 交通施設の状況 距離": "370"
+  "標準地番号 連番": "1",
+  "１㎡当たりの価格": "302000",
+  "路線価 年": "2023",
+  "路線価 相続税路線価": "225000",
+  "路線価 倍率": "0"
 }
 ```
 
@@ -283,7 +282,7 @@ def collect_land_price_features(*, center_lat: float, center_lon: float,
 Helper highlights:
 - Uses `slippy_tile_index`/`slippy_tile_bounds` for deterministic coverage.
 - Logs feature counts per tile and caches GeoJSON under `notebooks/data/raw/`.
-- Downstream cells convert unit-bearing strings (e.g., `"77,700(円/㎡)"`) via `parse_numeric_value` for reliable markers.
+- Downstream cells convert unit-bearing strings (e.g., `"77,700(?/?)"`) via `parse_numeric_value` for reliable markers.
 
 **Response excerpt**
 ```json
@@ -294,15 +293,12 @@ Helper highlights:
     "coordinates": [140.84022045135498, 38.28235738797571]
   },
   "properties": {
+    "location_number_ja": "川内明神横丁１５番１外",
+    "area_division_name_ja": "市街化区域",
     "city_code": "04101",
-    "use_category_name_ja": "住宅地",
-    "u_current_years_price_ja": "77,700(円/㎡)",
-    "u_cadastral_ja": "198(㎡)",
-    "nearest_station_name_ja": "東北福祉大前",
-    "u_road_distance_to_nearest_station_name_ja": "630m",
-    "year_on_year_change_rate": "6.7",
-    "gas_supply_availability": true,
-    "sewer_supply_availability": true
+    "u_road_distance_to_nearest_station_name_ja": "700m",
+    "building_structure_name_ja": "W（木造）",
+    "regulations_use_category_name_ja": "第二種住居地域"
   }
 }
 ```
@@ -314,7 +310,7 @@ Helper highlights:
 ### 4.6 Shared helper utilities
 - `load_env_variable(name, env_path='.env')`: resolves secrets locally while keeping `.env` out of version control.
 - `call_mlit_api(endpoint, params)`: central logging/error handling, treats 204/404 as empty datasets, and raises on unexpected statuses.
-- `parse_numeric_value(value)`: strips thousands separators and unit suffixes (`(円/㎡)`, `(㎡)`), returning floats or `None`.
+- `parse_numeric_value(value)`: strips thousands separators and unit suffixes (`(?/?)`, `(?)`), returning floats or `None`.
 - `slippy_tile_index` / `slippy_tile_bounds`: translate lon/lat to Web Mercator indices and bounding boxes for tile iteration.
 
 ## 5. Data Flow and Cleaning Logic
@@ -345,3 +341,52 @@ Helper highlights:
 2. Decide whether to ingest Sendai GTFS feeds; helpers already support joining additional accessibility measures.
 3. Build progress-report visuals directly from cached JSON so reviewers can reproduce results without live API calls.
 4. Document any rate-limit or outage observations during mid-term checkpoints.
+
+
+### 4.6 Map & Facility Tile APIs (XPT001, XPT002, XKT001-XKT025)
+
+These endpoints share the same slippy-tile semantics. `mlit_api_demo.EndpointSpec` seeds demo-friendly defaults of
+`response_format='geojson'`, `z=13`, `x=7301`, `y=3152` (the Sendai Station tile). Override those values to move the
+window or tighten filters.
+
+| Code | What it returns | Required parameters | Optional parameters |
+| --- | --- | --- | --- |
+| XPT001 | Transaction price points (tile feed) | response_format, z, x, y, from, to | priceClassification, landTypeCode |
+| XPT002 | Land price survey points | response_format, z, x, y, year | priceClassification, useCategoryCode |
+| XKT001 | City planning areas / classifications | response_format, z, x, y | None |
+| XKT002 | City planning zoning (用途地域) | response_format, z, x, y | None |
+| XKT003 | Location optimisation plan layers | response_format, z, x, y | None |
+| XKT004 | Elementary school districts | response_format, z, x, y | administrativeAreaCode |
+| XKT005 | Junior high school districts | response_format, z, x, y | administrativeAreaCode |
+| XKT006 | School facilities | response_format, z, x, y | None |
+| XKT007 | Nursery / kindergarten facilities | response_format, z, x, y | None |
+| XKT010 | Medical institutions | response_format, z, x, y | None |
+| XKT011 | Welfare facilities | response_format, z, x, y | administrativeAreaCode, welfareFacilityClassCode, welfareFacilityMiddleClassCode, welfareFacilityMinorClassCode |
+| XKT013 | Future population (250 m mesh) | response_format, z, x, y | None |
+| XKT014 | Fire / quasi-fire zones | response_format, z, x, y | None |
+| XKT015 | Station passenger volumes | response_format, z, x, y | None |
+| XKT016 | Disaster hazard areas | response_format, z, x, y | administrativeAreaCode |
+| XKT017 | Libraries | response_format, z, x, y | administrativeAreaCode |
+| XKT018 | Municipal offices & community centres | response_format, z, x, y | None |
+| XKT019 | Natural park areas | response_format, z, x, y | prefectureCode, districtCode |
+| XKT020 | Large-scale landfill / embankment risk | response_format, z, x, y | None |
+| XKT021 | Landslide prevention districts | response_format, z, x, y | prefectureCode, administrativeAreaCode |
+| XKT022 | Steep slope collapse hazard areas | response_format, z, x, y | prefectureCode, administrativeAreaCode |
+| XKT023 | District plans | response_format, z, x, y | None |
+| XKT024 | High-use districts | response_format, z, x, y | None |
+| XKT025 | Liquefaction propensity map | response_format, z, x, y | None |
+
+See `notebooks/mlit_api_demo.py` for the complete spec catalogue used by the demo notebook, and adjust the defaults as
+needed for production workloads.
+
+## Heilmeier Catechism
+
+1. **What are you trying to do?** Build a repeatable, well-documented workflow that pulls every publicly documented MLIT land, facilities, and transaction endpoint, cleans the payloads, and exposes them through a lightweight notebook so Sendai-focused analysts can blend property markets with mobility and hazard context without bespoke scripting.
+2. **How is it done today, and what are the limits of current practice?** Teams usually wire one or two endpoints manually, cache ad-hoc CSV exports, and stop at transaction prices. Those pipelines are brittle (parameter changes, Japanese-only keys) and ignore the rich spatial tiles for schools, medical sites, zoning, and hazards, so cross-domain reasoning stalls.
+3. **What is new in your approach, and why will it be successful?** We catalogued all 27 MLIT endpoints, captured required parameters and defaults in code, validated them by running the demo notebook end-to-end, and normalised both JSON and GeoJSON payloads for pandas. Input validation and encoded Japanese strings keep the plumbing stable, letting analysts focus on insight generation.
+4. **Who cares?** Sendai urban planners, resilience researchers, real-estate analysts, and mobility practitioners who need defensible evidence to argue for zoning tweaks, transit upgrades, or hazard mitigation.
+5. **If you are successful, what difference will it make, and how will you measure it?** Success means stakeholders can reproducibly answer �where should we intervene next?� in hours rather than weeks. We will measure progress via (a) complete API coverage (already demonstrated in `test_notebook.ipynb`), (b) turnaround time for two showcase analyses (ward-level housing dynamics and station-area resilience), and (c) structured feedback from at least two domain partners on clarity and usability.
+6. **What are the risks and payoffs?** Risks include API throttling, schema shifts, or untranslated fields that slow non-Japanese analysts. The payoff is a sustainable data spine for Sendai and a template other Japanese cities can clone with minimal edits.
+7. **How much will it cost?** Apart from staff time (approximately 80 graduate-research hours), expenses are negligible: API access is free, storage lives in the existing repo, and compute runs on personal machines or campus notebook servers.
+8. **How long will it take?** Remaining deliverables�two analysis narratives, polished visuals, and a final decision-maker brief�fit within the semester (~6 weeks). The ingestion and validation foundation is complete.
+9. **What are the midterm and final exams to check for success?** Midterm: a working notebook/dashboard bundle that renders the two showcase analyses with fresh pulls and documented parameters. Final: a reproducible release containing the helper module, scripted smoke tests across endpoints, the analysis notebooks, and a short decision-maker brief demonstrating how the insights informed or confirmed policy choices.

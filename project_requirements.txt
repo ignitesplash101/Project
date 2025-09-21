@@ -1,4 +1,4 @@
-Project
+﻿Project
 CSE6242 / CX4242 Data and Visual Analytics
 Grading & Schedule
 Proposal (7.5 course grade points)
@@ -22,7 +22,7 @@ Teaming
 The work will be carried out in teams of 4-6 people. You are welcome to decide on who to team with since each team needs to decide on their topic.
 
 
-Before the team formation deadline, we will share a spreadsheet and announce its availability. All teams will enter their team members’ information there, and team numbers (IDs) will be automatically assigned. There is no need to inform us of your team member lineup ahead of time.
+Before the team formation deadline, we will share a spreadsheet and announce its availability. All teams will enter their team membersâ€™ information there, and team numbers (IDs) will be automatically assigned. There is no need to inform us of your team member lineup ahead of time.
 
 For students in CSE6242A and CX4242A
 We recommend each group consist of either all grads (6242) or all undergrads (4242). The main reason is that grads and undergrads have different expectations and work schedules. If you want to form a group with both grads and undergrads:
@@ -43,16 +43,16 @@ Some students mistakenly believe that group projects reduce the amount of work t
 
 What should I do if a team member drops? What should I do if I plan to drop?
 
-Since project teams are formed and some project deliverables are due before the drop date, some teams may experience team members dropping. Once your team has confirmed that the student has dropped, re-evaluate your team and scope of work. Explicit requirements based on the number of team members such as the number of papers in your literature survey can be adjusted accordingly. Should the project scope be significantly and negatively affected due to the team member’s departure, in the Appendix of the relevant documents (depending on which deliverables are affected: proposal, progress report, final report), describe what happened, the specific changes to the project scope, and compelling justifications for those changes. Teams that fall below the minimum size due to team members dropping may continue as long as the team agrees that they will be able to complete the planned tasks.
+Since project teams are formed and some project deliverables are due before the drop date, some teams may experience team members dropping. Once your team has confirmed that the student has dropped, re-evaluate your team and scope of work. Explicit requirements based on the number of team members such as the number of papers in your literature survey can be adjusted accordingly. Should the project scope be significantly and negatively affected due to the team memberâ€™s departure, in the Appendix of the relevant documents (depending on which deliverables are affected: proposal, progress report, final report), describe what happened, the specific changes to the project scope, and compelling justifications for those changes. Teams that fall below the minimum size due to team members dropping may continue as long as the team agrees that they will be able to complete the planned tasks.
 
 
-If you are planning to drop the course, please communicate your intention to your teammates as soon as possible so they can proceed accordingly! Your team members should proceed and re-distribute your work among the remaining members. If you decide to continue to support your team, you can assume an “advisor” role who may provide feedback, but you should not be writing code, etc. It’s also important to set the right expectation or your teammates could unintentionally expect more from you than you want.
+If you are planning to drop the course, please communicate your intention to your teammates as soon as possible so they can proceed accordingly! Your team members should proceed and re-distribute your work among the remaining members. If you decide to continue to support your team, you can assume an â€œadvisorâ€ role who may provide feedback, but you should not be writing code, etc. Itâ€™s also important to set the right expectation or your teammates could unintentionally expect more from you than you want.
 
 
 This course has many sections. How should students form teams from different sections?
 
 
-The sections of this course are taught as the following two “cohorts”:
+The sections of this course are taught as the following two â€œcohortsâ€:
 
 
 CSE6242A/CX4242A
@@ -70,7 +70,7 @@ We do not recommend forming a 7-student team, because of the likelihood of team 
 
 the potential challenges working in larger teams; and
 Prof. Randy Pausch's advice on how to work successfully in a group. This is VERY IMPORTANT, especially if you have not worked together before.
-To request approval for a 7-student team, send us a private Ed Discussion post (check the “Private” box) and include the exact statement “Our team confirms that all team members are fully aware of the potential challenges of working in a larger 7-person team, as mentioned on the project description page.”
+To request approval for a 7-student team, send us a private Ed Discussion post (check the â€œPrivateâ€ box) and include the exact statement â€œOur team confirms that all team members are fully aware of the potential challenges of working in a larger 7-person team, as mentioned on the project description page.â€
 
 Choosing a Topic
 Pick your own topic:
@@ -79,35 +79,35 @@ Three major required components:
 at least one large, real dataset that your team can readily access and use (while APIs and web scraping might provide possible data access, they will significantly limit the speed and volume of data retrieval, and thus may not be appropriate for this project)
 some non-trivial analysis/algorithms/computation performed on the dataset (e.g., computing basic statistics, like average, min/max will not be enough); and
 an interactive user interface that interacts with the algorithms; the interface must be visual (and may additionally include other modalities, e.g., voice-controlled).
-IMPORTANT: Your team’s project is work owned by your team members. As your team decides on the project topic, please be mindful that the class project is NOT the best venue to express personal or subjective opinions — rather, it is for students to practice performing objective analysis based on facts and science.
-This project cannot be related to any team member's existing or ongoing work, such as another course project a team member is working on, or a team member's research project or thesis. In other words, no "double-dipping" is allowed. This ensures there are meaningful and adequate opportunities for all team members to learn and contribute to the project’s success.
+IMPORTANT: Your teamâ€™s project is work owned by your team members. As your team decides on the project topic, please be mindful that the class project is NOT the best venue to express personal or subjective opinions â€” rather, it is for students to practice performing objective analysis based on facts and science.
+This project cannot be related to any team member's existing or ongoing work, such as another course project a team member is working on, or a team member's research project or thesis. In other words, no "double-dipping" is allowed. This ensures there are meaningful and adequate opportunities for all team members to learn and contribute to the projectâ€™s success.
 Once you have selected a topic, you should do some background reading so that you are capable of describing, in some detail, what you expect to accomplish. For example, if you decide that you want to implement some new proposal for a multidimensional file structure, you will have to carefully read the paper that proposes similar structures, pinpoint their weaknesses, and explain how your approach will address these weaknesses. Once you have read up on your topic, you will be ready to write your proposal.
 
 What datasets are considered "large"?
 
-There are quite a few ways to define "large". It can be measured in size on disk, number of rows in a database, number of edges in a network, etc. One person's "large" could be another person's "small". For example, in my research group, we routinely work with million-edge graphs (say, just working with the graph structure; you’ll work on such “large” graphs in HW3 using just your computer), which are considered "small" in the data mining community, but large in other communities and applications. If you're working with videos, a few million of them will take up terabytes of petabytes. For those of you working in industry, you likely would routinely work with datasets that are in terabytes or petabytes.
+There are quite a few ways to define "large". It can be measured in size on disk, number of rows in a database, number of edges in a network, etc. One person's "large" could be another person's "small". For example, in my research group, we routinely work with million-edge graphs (say, just working with the graph structure; youâ€™ll work on such â€œlargeâ€ graphs in HW3 using just your computer), which are considered "small" in the data mining community, but large in other communities and applications. If you're working with videos, a few million of them will take up terabytes of petabytes. For those of you working in industry, you likely would routinely work with datasets that are in terabytes or petabytes.
 
 
 The main reason for requiring the use of a large dataset is so that you will learn to handle non-trivial computing and visualization problems. So the larger the better. The harder the problem, the more thinking you will need to do, and the more you will learn.
 
 
-If you can run an algorithm or analysis on your computer and get the results in a few seconds, your dataset is likely too small (and you likely won’t learn much from this experience). Similarly, if you can plot every single data point on the screen trivially and that doesn’t create any visual complexity or interaction challenges, your data is also likely too small. In other words, your team should encounter enough challenges to make yourselves consider the obstacles and strategies for tackling them!
+If you can run an algorithm or analysis on your computer and get the results in a few seconds, your dataset is likely too small (and you likely wonâ€™t learn much from this experience). Similarly, if you can plot every single data point on the screen trivially and that doesnâ€™t create any visual complexity or interaction challenges, your data is also likely too small. In other words, your team should encounter enough challenges to make yourselves consider the obstacles and strategies for tackling them!
 
 
 If you have a large dataset and that makes the project too hard, you can always choose to work on a subset of it. But if your dataset is too small (e.g., a few hundreds of rows, each having only a few attributes), you will learn little.
 
 
-I encourage you to pick an interesting topic and dataset (instead of a “safe” but boring topic) that would excite you -- this way, you would learn more. Be ambitious. It’s OK if you end up getting negative results, as long as you make the best decisions you can and you are satisfying all project requirements. One of the nicest thing of being a student is that it’s OK to try things out, so take advantage of this opportunity!
+I encourage you to pick an interesting topic and dataset (instead of a â€œsafeâ€ but boring topic) that would excite you -- this way, you would learn more. Be ambitious. Itâ€™s OK if you end up getting negative results, as long as you make the best decisions you can and you are satisfying all project requirements. One of the nicest thing of being a student is that itâ€™s OK to try things out, so take advantage of this opportunity!
 
 
 If you really need a rule-of-thumb guidance (for this course), I suggest you to consider datasets that have at least hundreds of thousands of rows/records, or at least hundreds of MBs (however, if that mostly contains "filler" information that you won't be using, then that's not a meaningful measure). Again, the larger the better. Use this project as a way to gain experience and knowledge in working with real datasets.
 
 Can we see example project deliverables from previous courses?
 
-Unfortunately, I do not have permission to share previous project teams’ deliverables. Also, since all teams are welcome to choose topics most interesting to them, different teams' ideas and approaches can be quite different --- there are many different ways to produce good proposals. Based on the project description and guidelines, most teams in the past developed excellent projects. In academia, when submitting grant proposals, we are not provided with any examples. It is up to us to propose the topic, and to convince the proposal reviewers the significance of our problems, ideas and solutions.  We are only provided with high-level format requirements and guidelines of our documents.
+Unfortunately, I do not have permission to share previous project teamsâ€™ deliverables. Also, since all teams are welcome to choose topics most interesting to them, different teams' ideas and approaches can be quite different --- there are many different ways to produce good proposals. Based on the project description and guidelines, most teams in the past developed excellent projects. In academia, when submitting grant proposals, we are not provided with any examples. It is up to us to propose the topic, and to convince the proposal reviewers the significance of our problems, ideas and solutions.  We are only provided with high-level format requirements and guidelines of our documents.
 
 
-Below are two published articles that are based on previous projects from this course (campus section), the articles themselves are not project deliverables from this course, but are like extended, improved version of the teams’ final project reports. For our OMS students, these projects are mentioned in Week 1's "Course Introduction: Course Goals & Expectations" video, start at 4:16.
+Below are two published articles that are based on previous projects from this course (campus section), the articles themselves are not project deliverables from this course, but are like extended, improved version of the teamsâ€™ final project reports. For our OMS students, these projects are mentioned in Week 1's "Course Introduction: Course Goals & Expectations" video, start at 4:16.
 
 
 Aurigo: An Interactive Tour Planner for Personalized Itineraries
@@ -136,7 +136,7 @@ What are the risks and payoffs?
 How much will it cost?
 How long will it take?
 What are the midterm and final "exams" to check for success? How will progress be measured?
-Your proposal document must be no more than 2 letter-size pages long, excluding references. In other words, only the references do NOT count towards the page limit; everything else — including the literature survey — counts. Use at least 1-inch margin for each page (top, right, bottom, left).  It must use 11pt font (or larger). The document must be in PDF format. You may create the document using any software that you want; we highly recommend using LaTeX (if you are new to LaTeX, see below for a starter template). Include any figures, charts, tables, captions, etc. whenever useful — they count towards the page limit (they may include text whose font size is smaller than 11pt, but such text must be legible). Your document should be self-contained. For example, do not just say: "We plan to implement Smith's Foo-Tree data structure [Smith86], and we will study its performance." Instead, you should briefly review the key ideas in the references, and describe clearly the alternatives that you will be examining.
+Your proposal document must be no more than 2 letter-size pages long, excluding references. In other words, only the references do NOT count towards the page limit; everything else â€” including the literature survey â€” counts. Use at least 1-inch margin for each page (top, right, bottom, left).  It must use 11pt font (or larger). The document must be in PDF format. You may create the document using any software that you want; we highly recommend using LaTeX (if you are new to LaTeX, see below for a starter template). Include any figures, charts, tables, captions, etc. whenever useful â€” they count towards the page limit (they may include text whose font size is smaller than 11pt, but such text must be legible). Your document should be self-contained. For example, do not just say: "We plan to implement Smith's Foo-Tree data structure [Smith86], and we will study its performance." Instead, you should briefly review the key ideas in the references, and describe clearly the alternatives that you will be examining.
 
 Grading scheme & Submission instructions
 [60%] Literature survey
@@ -155,14 +155,14 @@ The project should be novel and exciting in the solutions for both areas of (1) 
 [10%] Plan of activities
 Using either a Gantt chart (example) or a table, describe
 the activities each member has done and will do; and
-each activity’s start and end time (or start time and duration).
-[-5% if not included] Provide a statement that summarizes the distribution of team members’ effort. The summary statement can be as simple as "all team members have contributed a similar amount of effort". Place this statement immediately after the Gantt chart (or table). If effort distribution is too uneven, we may assign higher scores to members who have contributed more.
+each activityâ€™s start and end time (or start time and duration).
+[-5% if not included] Provide a statement that summarizes the distribution of team membersâ€™ effort. The summary statement can be as simple as "all team members have contributed a similar amount of effort". Place this statement immediately after the Gantt chart (or table). If effort distribution is too uneven, we may assign higher scores to members who have contributed more.
 [-5%] For every Heilmeier question that's not mentioned.
-Some teams organize their proposals based on the Heilmeier questions (e.g., each section addresses one question). Some teams organize theirs using section headings from the final report (e.g., “Introduction”, “Literature Survey”). The exact organization is up to you, provided that your answers to the Heilmeier questions are easy for us to spot.
-Include your team project’s title, team number, and all team member names (we recommend at the top of the first page)
+Some teams organize their proposals based on the Heilmeier questions (e.g., each section addresses one question). Some teams organize theirs using section headings from the final report (e.g., â€œIntroductionâ€, â€œLiterature Surveyâ€). The exact organization is up to you, provided that your answers to the Heilmeier questions are easy for us to spot.
+Include your team projectâ€™s title, team number, and all team member names (we recommend at the top of the first page)
 Team's contact person submits a softcopy, named teamXXXproposal.pdf (i.e., that person submits for the whole team), where XXX is the team number (e.g., team001proposal.pdf for team 1). Visit Canvas for submission instructions.
 
-Extremely Important: all communication (e.g., emails, Teams/Slack messages) between team members MUST be visible to all other team members at all times — do not send private messages between only a subset of the team members. A great majority of the teams that had team conflicts violated this rule. All team members must read: https://www.cs.cmu.edu/~pausch/Randy/tipoForGroups.html
+Extremely Important: all communication (e.g., emails, Teams/Slack messages) between team members MUST be visible to all other team members at all times â€” do not send private messages between only a subset of the team members. A great majority of the teams that had team conflicts violated this rule. All team members must read: https://www.cs.cmu.edu/~pausch/Randy/tipoForGroups.html
 
 
 An appendix is for optional, non-essential information. We do not grade it. Thus, do NOT put your literature survey in an appendix.
@@ -177,24 +177,24 @@ See other articles' related work sections for inspiration, e.g., Apolo paper
 Multiple papers may share similar themes, use similar methods so they may be summarized and discussed together.
 Note that the literature survey accounts for 60% of the proposal's grade, so your literature survey should be substantial!
 
-Which papers are considered “long” (or “short”)?
+Which papers are considered â€œlongâ€ (or â€œshortâ€)?
 
 Long papers refer to typical papers published at top academic venues (e.g., KDD, CHI, ICML). They are usually at least 8-10 pages long, in 2-column format, which translate into 5000 or more words. Thus, short paper would be 4-5 pages or fewer. Example long papers:
 
-GAN Lab. VAST’18. 2-column IEEE format
-SHIELD. KDD’18. 2-column ACM format
-ShapeShifter. PKDD’18, 1-column Springer format
+GAN Lab. VASTâ€™18. 2-column IEEE format
+SHIELD. KDDâ€™18. 2-column ACM format
+ShapeShifter. PKDDâ€™18, 1-column Springer format
 
 Should papers be peer-reviewed? How to tell if a paper was peer-reviewed?
 
 Yes, they should be peer-reviewed, unless there is a strong reason for it not to be (e.g., a book chapter).
 
-You can usually find out whether a journal or conference proceeding is peer-reviewed by checking its submission and reviewing process (or lack thereof), by visiting the conferences or publishers’ websites. A quick way to look up the venue at where a paper was published is to plug in the paper’s title into Google Scholar. A very short of these for data analytics/Machine Learning/AI include: KDD, IEEE ICDM, IEEE Vis, UbiComp, SIAM SDM, ICDM, NeurIPS, ICML, AAAI, IJCAI, AISTATS, and many more.
+You can usually find out whether a journal or conference proceeding is peer-reviewed by checking its submission and reviewing process (or lack thereof), by visiting the conferences or publishersâ€™ websites. A quick way to look up the venue at where a paper was published is to plug in the paperâ€™s title into Google Scholar. A very short of these for data analytics/Machine Learning/AI include: KDD, IEEE ICDM, IEEE Vis, UbiComp, SIAM SDM, ICDM, NeurIPS, ICML, AAAI, IJCAI, AISTATS, and many more.
 
 
 How to access papers behind paywalls?
 
-One way is to search via the Georgia Tech Library . We recommend the more convenient way via Georgia Tech campus VPN — once you are on VPN, you can access research publications immediately when searching, e.g., through Google Scholar, without having to search the GT Library or repeatedly sign in via GT authorizations on multiple publishers' sites.
+One way is to search via the Georgia Tech Library . We recommend the more convenient way via Georgia Tech campus VPN â€” once you are on VPN, you can access research publications immediately when searching, e.g., through Google Scholar, without having to search the GT Library or repeatedly sign in via GT authorizations on multiple publishers' sites.
 
 
 What kind of papers are considered relevant?
@@ -209,11 +209,11 @@ The short answer is "no" if the goal of it is to avoid thinking through the chal
 Proposal Presentation
 [OMS and campus] Team's contact person submits a presentation slide deck called teamXXXslides.pdf, where XXX is the team number (e.g., team001slides.pdf for team 1). PDF only; no PPT or other formats. Visit Canvas for submission instructions.
 [OMS only] Team's contact person submits a 2-minute video presentation (one presentation per team).
-The video should show your slides (e.g., as pdf on your computer screen via screen capture, say using Quicktime, MonoSnap, etc.) with voice narration; it is up to you whether to show your face. You should be able to create this recording quickly with little effort – no need to do any special video or audio editing.
-Upload the video as an unlisted YouTube video (NOT “private” or “public”). Unlisted videos can be viewed by anyone with the link to your unlisted video.
-Submit the URL (web link) of the unlisted YouTube video. The graders will use this URL to view the video. To double-check that the URL works, visit that URL using a separate web browser that has been fully logged out of Google services (e.g., all cache cleared, use “Incognito” mode in Chrome, etc.). Visit Canvas for submission instructions.
+The video should show your slides (e.g., as pdf on your computer screen via screen capture, say using Quicktime, MonoSnap, etc.) with voice narration; it is up to you whether to show your face. You should be able to create this recording quickly with little effort â€“ no need to do any special video or audio editing.
+Upload the video as an unlisted YouTube video (NOT â€œprivateâ€ or â€œpublicâ€). Unlisted videos can be viewed by anyone with the link to your unlisted video.
+Submit the URL (web link) of the unlisted YouTube video. The graders will use this URL to view the video. To double-check that the URL works, visit that URL using a separate web browser that has been fully logged out of Google services (e.g., all cache cleared, use â€œIncognitoâ€ mode in Chrome, etc.). Visit Canvas for submission instructions.
 Set the title of the YouTube video to teamXXXproposal, where XXX is the team number (e.g., 001 for team 1).
-IMPORTANT: you need a Google Account to upload a video to YouTube. To access YouTube, depending on your geographic location, you may need to use VPN (e.g., Georgia Tech’s VPN). Uploading a large video file can take a lot of time; VPN can further slow that down. Make sure you finish creating and uploading your video early, so you have ample time to verify that your submission is successful.
+IMPORTANT: you need a Google Account to upload a video to YouTube. To access YouTube, depending on your geographic location, you may need to use VPN (e.g., Georgia Techâ€™s VPN). Uploading a large video file can take a lot of time; VPN can further slow that down. Make sure you finish creating and uploading your video early, so you have ample time to verify that your submission is successful.
 [Campus only]
 Presentations take place during class time. 2 minutes per team. See the spreadsheet on Canvas for your team's presentation date and time. Presentations take place during class time. The first presentation will commence immediately as the class begins.
 If you overrun, we will boot you off the stage and deduct 5% of your presentation grade.
@@ -221,11 +221,11 @@ Two teams can swap their presentation dates if both teams agree; no need to ask 
 Attendance is mandatory. Lateness and absence will be noted; marks may be deducted for no-show. If you cannot attend, let Polo and TAs know through a private post on Ed Discussion. We want you all to attend and support your peers, whether they are part of your own team or another. Observing how others present helps you improve your own presentation skills. Additionally, showing support for teams presenting before or after yours is common courtesy and a mark of respect.
 Every team's presentation slides will be collected via Canvas a few days before the proposal days, and pre-loaded to the computer at the podium, to reduce switching time between teams.
 Grading
-[45%] You must answer the Heilmeier questions. 5% for each question. If a question doesn’t apply, say so.
+[45%] You must answer the Heilmeier questions. 5% for each question. If a question doesnâ€™t apply, say so.
 [15%] Brief literature survey mentioning no fewer than 5 relevant papers (selected from all the papers your team have reviewed). Can be combined with Heilmeier question(s).
 [10%] Expected innovations. Can be combined with Heilmeier question(s).
 The project should be novel and exciting in the solutions for both areas of (1) algorithm/computation and (2) visualization.
-[10%] Plan of activities (same requirements as described in “Proposal” section above)
+[10%] Plan of activities (same requirements as described in â€œProposalâ€ section above)
 [20%] Presentation delivery
 [-5%] Illegible text, tiny figures, bad color contrast, etc.
 [-5%] Overrun. In addition, you may lose additional points for required content that is not covered within the time limit.
@@ -241,17 +241,17 @@ It mainly serves as a checkpoint, to detect and prevent dead-ends and other prob
 
 Organize the report using the same sections as your final report (1. Introduction; 2. Problem Definition; 3. Literature Survey; etc), with a few sections "under construction", describing the work performed up to then, and the revised plans for the whole project.
 
-Specifically, the introduction and literature survey sections should be in their final form. The section on the proposed method should be almost finished. The sections about experiments and conclusions will have whatever results you have obtained, as well as “place-holders” for the results you plan/hope to obtain.
+Specifically, the introduction and literature survey sections should be in their final form. The section on the proposed method should be almost finished. The sections about experiments and conclusions will have whatever results you have obtained, as well as â€œplace-holdersâ€ for the results you plan/hope to obtain.
 
 Grading scheme & Submission instructions
-[70%] Detailed description of your team’s methods (should be almost finished)
+[70%] Detailed description of your teamâ€™s methods (should be almost finished)
 Provide a clear list of innovations: give a list of the best 2-4 ideas that your approach exhibits.
 This section should be almost finished. That is, we expect your team to have made substantial progress in the design and implementation of BOTH the computation and visualization components.
 [25%] Detailed description of the design of upcoming experiments for evaluating your approaches
-[5%] Plan of activities (same requirements as described in “Proposal” above)
+[5%] Plan of activities (same requirements as described in â€œProposalâ€ above)
 Provide the old plan and the revised plan
-[-5% if not included] Provide a statement that summarizes the distribution of team members’ effort. The summary statement can be as simple as "all team members have contributed a similar amount of effort". Place this statement immediately after the Gantt chart (or table). If effort distribution is too uneven, we may assign higher scores to members who have contributed more.
-Include your team project’s title, team number, and all team member names (we recommend at the top of the first page)
+[-5% if not included] Provide a statement that summarizes the distribution of team membersâ€™ effort. The summary statement can be as simple as "all team members have contributed a similar amount of effort". Place this statement immediately after the Gantt chart (or table). If effort distribution is too uneven, we may assign higher scores to members who have contributed more.
+Include your team projectâ€™s title, team number, and all team member names (we recommend at the top of the first page)
 Team's contact person submits a softcopy (progress report only), named teamXXXprogress.pdf, where XXX is the team number (e.g., team001progress.pdf for team 1). Visit Canvas for submission instructions.
 
 
@@ -265,8 +265,8 @@ The progress report may be written based on your proposal. For example, the lite
 
 
 
-What do you mean by “evaluation”?
-To evaluate your team’s proposed approaches, you come up with experiments to test how well they address the problems your team wants to solve. In general, when you propose a new idea, you need to show that your idea works well --- experiments is one way to demonstrate this. Ultimately, you will want to deploy your approach and have people use them, which will be the definitive way to measure your approach's "success" but that clearly will take time, thus is not required in this class project.
+What do you mean by â€œevaluationâ€?
+To evaluate your teamâ€™s proposed approaches, you come up with experiments to test how well they address the problems your team wants to solve. In general, when you propose a new idea, you need to show that your idea works well --- experiments is one way to demonstrate this. Ultimately, you will want to deploy your approach and have people use them, which will be the definitive way to measure your approach's "success" but that clearly will take time, thus is not required in this class project.
 
 
 The type of experiments depend on your proposed approach(es) and problem(s). Suppose a team is proposing an movie recommendation tool that allows users to interactively specify movies that they like and receive recommendations in real time, then possible experiments may include:
@@ -285,16 +285,16 @@ Final Poster Presentation [Peer-graded]
 Overview
 Each team creates a single poster for the whole team.
 Each team member separately prepares and creates a 3-minute video presentation (i.e., one presentation per learner).
-Thus, every team member should be very similar with the team’s project very well. Each team member should plan their own presentation separately, and team members should not share presentation scripts.
-Your video should show your poster with voice narration (e.g., as pdf on your computer screen via screen capture, say using MonoSnap, native screen recording software on your OS). It is up to you whether to show your face. You should be able to create this recording quickly with little effort – no need to do any special video or audio editing. You may zoom into and out of the poster as you present, so the viewer can more easily see the poster content.
+Thus, every team member should be very similar with the teamâ€™s project very well. Each team member should plan their own presentation separately, and team members should not share presentation scripts.
+Your video should show your poster with voice narration (e.g., as pdf on your computer screen via screen capture, say using MonoSnap, native screen recording software on your OS). It is up to you whether to show your face. You should be able to create this recording quickly with little effort â€“ no need to do any special video or audio editing. You may zoom into and out of the poster as you present, so the viewer can more easily see the poster content.
 Demo: optional but encouraged. Demo time counts towards presentation time.
-Upload your video as an unlisted YouTube video (NOT “private” or “public”). Unlisted videos can be viewed by anyone (in this case, peer-graders who grade your presentation) with the link to your unlisted video.
-Submit the URL (web link) of your own unlisted YouTube video via Canvas. Your graders will use this URL to view your video. To double-check that your URL works, visit that URL using a separate web browser that has been fully logged out of Google services (e.g., all cache cleared, use “Incognito” mode in Chrome, etc.)
+Upload your video as an unlisted YouTube video (NOT â€œprivateâ€ or â€œpublicâ€). Unlisted videos can be viewed by anyone (in this case, peer-graders who grade your presentation) with the link to your unlisted video.
+Submit the URL (web link) of your own unlisted YouTube video via Canvas. Your graders will use this URL to view your video. To double-check that your URL works, visit that URL using a separate web browser that has been fully logged out of Google services (e.g., all cache cleared, use â€œIncognitoâ€ mode in Chrome, etc.)
 Set the title of your YouTube video to teamXXXposter-YY, where XXX is the team number (e.g., 001 for team 1), and YY is the student's last name (e.g., smith). It is OK if multiple members have the same last name, because videos are uniquely identified by their URLs.
-IMPORTANT: you need a Google Account to upload a video to YouTube. To access YouTube, depending on your geographic location, you may need to use VPN (e.g., Georgia Tech’s VPN). Uploading a large video file can take a lot of time; VPN can further slow that down. Make sure you finish creating and uploading your video early, so you have ample time to verify that your submission is successful.
+IMPORTANT: you need a Google Account to upload a video to YouTube. To access YouTube, depending on your geographic location, you may need to use VPN (e.g., Georgia Techâ€™s VPN). Uploading a large video file can take a lot of time; VPN can further slow that down. Make sure you finish creating and uploading your video early, so you have ample time to verify that your submission is successful.
 Each learner will grade several other video presentations by learners from other teams.
 Peer grading is NOT anonymous. That is, a presenter knows who the graders are, and a grader knows who the presenters are.
-If a grader does not finish all the assigned peer grading, that grader may NOT receive all or part of the grader’s own final poster presentation grade (i.e., up to 7.5% of final course grade), since the peer grading is an integral part of the project presentation.
+If a grader does not finish all the assigned peer grading, that grader may NOT receive all or part of the graderâ€™s own final poster presentation grade (i.e., up to 7.5% of final course grade), since the peer grading is an integral part of the project presentation.
 We will compute a student's final poster presentation score as follows. For each rubric item, we take the average of the two highest scores. Then, we sum up these "averages" as the student's final score. This formula should heavily suppress "outlier" scores. After the peer grading ends, as additional safeguard, we will go through everyone's scores.
 For example, suppose
 
@@ -324,7 +324,7 @@ We want students to learn and practice delivering constructive criticism, for an
 
 People rarely like to hear about negative comments, even if they are accurate and helpful. Giving negative news is always hard, but that is part of life! This means we should carefully phrase our comments as constructive criticism. For example,
 
-instead of saying “too much text and not enough figures”, you could say "Fig 1 to 3 are important figures in this project; currently they are not easy to see (images are too small; text is not legible). Suggest reducing the amount of text, e.g., into succinct, bullet points to create space for the figures".
+instead of saying â€œtoo much text and not enough figuresâ€, you could say "Fig 1 to 3 are important figures in this project; currently they are not easy to see (images are too small; text is not legible). Suggest reducing the amount of text, e.g., into succinct, bullet points to create space for the figures".
 Similarly, avoid "I don't think that the visualization is anything new or how it is helpful," which is highly subjective. Instead, justify your comments; if the presenter did not clarify the novelty or significance of an approach (it is probably new, but just that the presenter did not point it out), you could say "it's unclear from the presentation and poster whether the proposed visualization is an improvement over the state of the art (it seems to be a standard design); more clarification is needed."
  
 
@@ -333,7 +333,7 @@ There are pros and cons for both anonymous and open review. It is still an open 
 
 
 Poster Design
-Design your team’s poster *well before* the submission deadline, to avoid last-minute rush.
+Design your teamâ€™s poster *well before* the submission deadline, to avoid last-minute rush.
 
 The poster must be in portrait orientation, 30 inches wide and 40 inches tall. We suggest using 18pt font size and larger.
 
@@ -343,9 +343,9 @@ A deck of PowerPoint slides is not acceptable as a poster. See the illustration 
 
 
 Grading
-Your poster presentation should cover the following parts (point distribution shown on the left). Thus, the grading is about both your presentation delivery (e.g., what you say, where you direct the audience’s attention), and the poster content.
+Your poster presentation should cover the following parts (point distribution shown on the left). Thus, the grading is about both your presentation delivery (e.g., what you say, where you direct the audienceâ€™s attention), and the poster content.
 
-If you overrun, besides losing points for the rubric item “5% Finished on time?”, you may lose additional points for the required content that you have not covered within the time limit --- imagine you are delivering a presentation in person and you are alloted 3 minutes, once that time is up, you would need to stop and would not be able to present additional content (thus, that content will not be graded).
+If you overrun, besides losing points for the rubric item â€œ5% Finished on time?â€, you may lose additional points for the required content that you have not covered within the time limit --- imagine you are delivering a presentation in person and you are alloted 3 minutes, once that time is up, you would need to stop and would not be able to present additional content (thus, that content will not be graded).
 
 
 10%
@@ -412,7 +412,7 @@ Poster Design:
 
 How should you grade it if audio narration is missing?
 
-Please grade using your best judgment based only on what you can see (and not hear). For example, certain rubric items would likely receive very low scores (e.g., “Spoke clearly and at a good pace?”), and some rubric items could become unsatisfactory, confusing, or even “missing” because a voice narration might have helped direct the audience (i.e., you as the grader) to certain parts of the poster. However, since the audio is missing, the audience can no longer easily locate those parts—the onus to highlight what’s important is on the presenter, not the grader.
+Please grade using your best judgment based only on what you can see (and not hear). For example, certain rubric items would likely receive very low scores (e.g., â€œSpoke clearly and at a good pace?â€), and some rubric items could become unsatisfactory, confusing, or even â€œmissingâ€ because a voice narration might have helped direct the audience (i.e., you as the grader) to certain parts of the poster. However, since the audio is missing, the audience can no longer easily locate those partsâ€”the onus to highlight whatâ€™s important is on the presenter, not the grader.
 
 How should you grade it if a required element is included on the poster but not mentioned in the narration?
 
@@ -453,26 +453,26 @@ Writeup: no more than 6 letter-size pages (excluding references), 11pt font, typ
 Software: packaging, documentation, and portability. The goal is to provide enough material, so that other people can use it and continue your work, if you are to open-source it --- in other words, you should make it easy and attractive for others to use your work.
 Grading scheme & Submission instructions
 Writeup, with six sections numbered and named exactly as follows (highlighted in bold font)
-1. Introduction [2%]  — motivation
-2. Problem Definition [3%] — provide a precise formal problem definition, in addition to the jargon-free version (for Heilmeier question #1).
+1. Introduction [2%]  â€” motivation
+2. Problem Definition [3%] â€” provide a precise formal problem definition, in addition to the jargon-free version (for Heilmeier question #1).
 3. Literature Survey [5%]
 4. Proposed method
-[10%] Intuition — why should it be better than the state of the art?
+[10%] Intuition â€” why should it be better than the state of the art?
 [35%] Detailed description of your approaches: algorithms, user interfaces, etc.
 5. Evaluation
 [5%] Description of your testbed; list of questions your experiments are designed to answer
 [25%] Detailed description of the experiments; observations (as many as you can!)
 6. Conclusions and Discussion [5%]
 Depending on the topic of your project, this section may clearly summarize the key points of the project, such as the main ideas, results, impacts, significances, etc., and discuss issues such as limitations, implications, potential future extensions, etc.
-[-5% if not included] Provide a statement that summarizes the distribution of team members’ effort. The summary statement can be as simple as "all team members have contributed a similar amount of effort". If effort distribution is too uneven, we may assign higher scores to members who have contributed more.
-Include your team project’s title, team number, and all team member names (we recommend at the top of the first page)
-[10%] Team’s contact person submits one zip file called teamXXXfinal.zip, where XXX is the team number (e.g., team001final.zip for team 1). Visit Canvas for submission instructions. The teamXXXfinal.zip will contain the following 3 components:
+[-5% if not included] Provide a statement that summarizes the distribution of team membersâ€™ effort. The summary statement can be as simple as "all team members have contributed a similar amount of effort". If effort distribution is too uneven, we may assign higher scores to members who have contributed more.
+Include your team projectâ€™s title, team number, and all team member names (we recommend at the top of the first page)
+[10%] Teamâ€™s contact person submits one zip file called teamXXXfinal.zip, where XXX is the team number (e.g., team001final.zip for team 1). Visit Canvas for submission instructions. The teamXXXfinal.zip will contain the following 3 components:
 README.txt - a concise, short README.txt file, corresponding to the "user guide". This file should contain:
 DESCRIPTION - Describe the package in a few paragraphs
 INSTALLATION - How to install and setup your code
 EXECUTION - How to run a demo on your code
 [Optional, but recommended] DEMO VIDEO - Include the URL of a 1-minute *unlisted* YouTube video in this txt file. The video would show how to install and execute your system/tool/approach (e.g, from typing the first command to compile, to system launching, and running some examples). Feel free to speed up the video if needed (e.g., remove less relevant video segments). This video is optional (i.e., submitting a video does not increase scores; not submitting one does not decrease scores). However, we recommend teams to try and create such a video, because making the video helps teams better think through what they may want to write in the README.txt, and generally how they want to "sell" their work.
-DOC - a folder called DOC (short for “documentation”) containing:
+DOC - a folder called DOC (short for â€œdocumentationâ€) containing:
 teamXXXreport.pdf - Your report writeup in PDF format; can be created using any software, e.g., latex, Word.
 teamXXXposter.pdf - Your final poster.
 CODE - All your code should be added here. Make sure that your package includes only the absolutely necessary set of files.
@@ -496,5 +496,4 @@ Can my team publish our project (e.g., on GitHub)?
 Your team collectively owns the work. Discuss with your teammates before making anything public, and if your team decides to do so, ensure it is done in a manner unlikely to encourage future plagiarism. For instance, you may open-source the project similar to how typical open-source projects would. Definitely, do not simply upload deliverables that your group developed specifically for this course (e.g., proposal.pdf, proposal.docx, etc.).
 
 Georgia Tech Create-X opportunity
-Georgia Tech as one of the top universities in entrepreneurship is the home to one of the most successful incubators called Create-X. All Georgia Tech students can apply for the Startup Launch Create-X in Georgia Tech. If your team works on a good idea and you would like to take the next step and commercialize your idea and start your own company, I strongly recommend to apply for the Startup Launch in Create-X and take advantage of Funding, Coaching and many more supports that come with this program.    
-
+Georgia Tech as one of the top universities in entrepreneurship is the home to one of the most successful incubators called Create-X. All Georgia Tech students can apply for the Startup Launch Create-X in Georgia Tech. If your team works on a good idea and you would like to take the next step and commercialize your idea and start your own company, I strongly recommend to apply for the Startup Launch in Create-X and take advantage of Funding, Coaching and many more supports that come with this program.
