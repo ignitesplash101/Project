@@ -60,7 +60,11 @@ def train_regression_models(
             continue
         model = factory()
         model.fit(train_df[feature_cols], train_df[target_col])
-        preds = {split: model.predict(split_df[feature_cols]) for split, split_df in splits.items()}
+        preds = {}
+        for split, split_df in splits.items():
+            if split_df.empty:
+                continue
+            preds[split] = model.predict(split_df[feature_cols])
         metrics = {
             split: evaluate_sets(split_df[target_col], preds[split])
             for split, split_df in splits.items()
