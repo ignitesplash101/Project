@@ -200,68 +200,69 @@ def export_lstm_shap(
     target_col: str,
     predictions: Dict[str, np.ndarray],
 ):
-    eval_split = "val" if sequence_data["val"]["features"].size else "test"
-    if sequence_data[eval_split]["features"].size == 0 or sequence_data["train"]["features"].size == 0:
+    splits = [split for split in ["val", "test"] if sequence_data[split]["features"].size]
+    if not splits or sequence_data["train"]["features"].size == 0:
         return
     background_np = sequence_data["train"]["features"]
     if background_np.shape[0] > LSTM_SHAP_BACKGROUND_CAP:
         background_np = background_np[:LSTM_SHAP_BACKGROUND_CAP]
     background = torch.tensor(background_np, dtype=torch.float32)
-    eval_feats_np = sequence_data[eval_split]["features"]
-    eval_targets = sequence_data[eval_split]["targets"]
-    eval_meta = sequence_data[eval_split]["meta"].reset_index(drop=True)
-    if eval_feats_np.shape[0] > MAX_LSTM_SHAP_EVAL:
-        eval_feats_np = eval_feats_np[:MAX_LSTM_SHAP_EVAL]
-        eval_targets = eval_targets[:MAX_LSTM_SHAP_EVAL]
-        eval_meta = eval_meta.iloc[:MAX_LSTM_SHAP_EVAL].reset_index(drop=True)
-    eval_features = torch.tensor(eval_feats_np, dtype=torch.float32)
-
     model_cpu = PriceLSTM(input_dim=background.shape[-1]).to(torch.device("cpu"))
     model_cpu.load_state_dict(model.state_dict())
     model_cpu.eval()
-
     explainer = shap.DeepExplainer(model_cpu, background)
-    shap_values = explainer.shap_values(eval_features, check_additivity=False)
-    if isinstance(shap_values, list):
-        shap_values = shap_values[0]
-    shap_array = np.asarray(shap_values)
-    shap_agg = shap_array.sum(axis=1).reshape(shap_array.shape[0], -1)
 
-    feature_matrix = eval_feats_np.mean(axis=1)
-    feature_df = pd.DataFrame(feature_matrix, columns=feature_cols)
-    sample_df = pd.concat([eval_meta.reset_index(drop=True), feature_df], axis=1)
+    for eval_split in splits:
+        eval_feats_np = sequence_data[eval_split]["features"]
+        eval_targets = sequence_data[eval_split]["targets"]
+        eval_meta = sequence_data[eval_split]["meta"].reset_index(drop=True)
+        if eval_feats_np.shape[0] > MAX_LSTM_SHAP_EVAL:
+            eval_feats_np = eval_feats_np[:MAX_LSTM_SHAP_EVAL]
+            eval_targets = eval_targets[:MAX_LSTM_SHAP_EVAL]
+            eval_meta = eval_meta.iloc[:MAX_LSTM_SHAP_EVAL].reset_index(drop=True)
+        eval_features = torch.tensor(eval_feats_np, dtype=torch.float32)
 
-    actual = eval_targets
-    preds_full = predictions.get(eval_split, np.zeros_like(sequence_data[eval_split]["targets"]))
-    preds = preds_full[: len(actual)]
+        shap_values = explainer.shap_values(eval_features, check_additivity=False)
+        if isinstance(shap_values, list):
+            shap_values = shap_values[0]
+        shap_array = np.asarray(shap_values)
+        shap_agg = shap_array.sum(axis=1).reshape(shap_array.shape[0], -1)
 
-    write_shap_outputs(
-        level_name,
-        "TorchLSTM",
-        eval_split,
-        feature_cols,
-        sample_df,
-        shap_agg,
-        target_col,
-        preds,
-        actual,
-    )
-    if "City" in sample_df.columns:
-        for city in sample_df["City"].dropna().unique():
-            mask = sample_df["City"] == city
-            if mask.sum() == 0:
-                continue
-            write_shap_outputs(
-                level_name,
-                "TorchLSTM",
-                f"{eval_split}_{str(city).lower()}",
-                feature_cols,
-                sample_df.loc[mask].reset_index(drop=True),
-                shap_agg[mask],
-                target_col,
-                preds[mask],
-                actual[mask],
-            )
+        feature_matrix = eval_feats_np.mean(axis=1)
+        feature_df = pd.DataFrame(feature_matrix, columns=feature_cols)
+        sample_df = pd.concat([eval_meta.reset_index(drop=True), feature_df], axis=1)
+
+        actual = eval_targets
+        preds_full = predictions.get(eval_split, np.zeros_like(sequence_data[eval_split]["targets"]))
+        preds = preds_full[: len(actual)]
+
+        write_shap_outputs(
+            level_name,
+            "TorchLSTM",
+            eval_split,
+            feature_cols,
+            sample_df,
+            shap_agg,
+            target_col,
+            preds,
+            actual,
+        )
+        if "City" in sample_df.columns:
+            for city in sample_df["City"].dropna().unique():
+                mask = sample_df["City"] == city
+                if mask.sum() == 0:
+                    continue
+                write_shap_outputs(
+                    level_name,
+                    "TorchLSTM",
+                    f"{eval_split}_{str(city).lower()}",
+                    feature_cols,
+                    sample_df.loc[mask].reset_index(drop=True),
+                    shap_agg[mask],
+                    target_col,
+                    preds[mask],
+                    actual[mask],
+                )
 
 
 def run_lstm_pipeline(
