@@ -107,7 +107,7 @@ else:
 # Coverage (based on mesh_quarterly_price_index.csv)
 # =====================================================
 try:
-    price_index_df = pd.read_csv("../data/mesh_quarterly_price_index.csv")
+    price_index_df = pd.read_csv("../final_code/data/mesh_quarterly_price_index.csv")
     # Unique meshes that have valid price index values
     coverage = price_index_df['Latitude'].notnull().sum()
     total = len(price_index_df["Latitude"])
