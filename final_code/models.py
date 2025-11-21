@@ -11,6 +11,7 @@ from matplotlib import pyplot as plt
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 import lightgbm as lgb
+import pickle
 
 from . import config
 from .shap_utils import write_shap_outputs
@@ -146,6 +147,17 @@ def save_tree_shap_outputs(
         actual,
         float(expected_value),
     )
+    ################################### added for visualisation ###############
+    shap_explanation = shap.Explanation(
+        values=shap_values,
+        base_values=np.full(shap_values.shape[0], expected_value),
+        data=sample[feature_cols].to_numpy(),
+        feature_names=feature_cols,
+    )
+    shap_pkl_path = config.OUTPUT_DIR / f"{level_name.lower()}_{model_name.lower()}_{split_name}_shap.pkl"
+    with shap_pkl_path.open("wb") as f:
+        pickle.dump(shap_explanation, f)
+################################################################################
     if "City" in sample.columns:
         for city in sample["City"].dropna().unique():
             city_mask = sample["City"] == city
@@ -242,6 +254,13 @@ def export_linear_shap(
         actual,
         float(expected_value),
     )
+    ##################################
+    #save SHAP Explanation pickle for LinearRegression ===
+    shap_pkl_path = config.OUTPUT_DIR / f"{level_name.lower()}_linearregression_{split_name}_shap.pkl"
+    with shap_pkl_path.open("wb") as f:
+        pickle.dump(shap_values, f)
+    # === END CODE ===
+
     if "City" in eval_df.columns:
         shap_array = getattr(shap_values, "values", shap_values)
         for city in eval_df["City"].dropna().unique():
