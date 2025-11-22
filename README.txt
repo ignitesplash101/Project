@@ -12,9 +12,9 @@ cd CODE/visualisation && streamlit run streamlit_2.py
 
 DESCRIPTION
 -----------
-CLI-first pipeline (in `CODE/`) to rebuild ward/mesh panels, train classical + LSTM models, export SHAP explainability, and power a Streamlit dashboard. 
+This is a simple CLI-first pipeline (in `CODE/`) to rebuild ward/mesh panels, train classical + LSTM models, export SHAP explainability files and other metrics, and power a Streamlit dashboard using real estate prices in Japan. 
 The zip deliverable `team090final.zip` includes this `README.txt`, `DOC/`, and the `CODE/` folder. 
-The  `DOC/` folder contains the final report and poster `team090report.pdf` and `team090poster.pdf
+The  `DOC/` folder contains the final report and poster `team090report.pdf` and `team090poster.pdf`. For more details on the project approach and methodologies, please refer to either of these files.
 *Only synthetic demo data is provided here for the submission; the full MLIT Real Estate Transaction Price data is excluded due to project submission constraints. 
 To reproduce full results, you will need to download MLIT data via the public API and process them locally.
 
@@ -53,13 +53,16 @@ Fast path (skip LSTM):
 ```
 SKIP_LSTM=1 python -m CODE.run_workflow
 ```
-This rebuilds panels, trains classical models, writes metrics/predictions, and exports SHAP. Outputs land in `CODE/outputs/`. You generally do not need to run reporting/efficiency scripts separately.
+This rebuilds panels, trains classical models, writes metrics/predictions, and exports SHAP based on the sample data. 
+Outputs from this process will land in `CODE/outputs/`. 
 
-Streamlit demo (uses `CODE/outputs` and the bundled demo geojson):
+Streamlit (uses `CODE/outputs` and the bundled demo geojson), to initialize the dashboard:
 ```
 cd CODE/visualisation
 streamlit run streamlit_2.py
 ```
+If you are unable to run this locally, the `team090poster.pdf` file contains a QR code that allows you access to an online Streamlit community hosted version of the dashboard.
+Please feel free to use that instead.
 
 Key outputs:
 - `outputs/model_results.csv` — leaderboard
