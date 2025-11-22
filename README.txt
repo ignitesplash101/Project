@@ -62,6 +62,15 @@ Environment setup (conda, recommended)
    ```
    Otherwise, set `SKIP_LSTM=1` when running the workflow to skip Torch.
 
+Submission packaging (teamXXXfinal.zip)
+---------------------------------------
+- Zip name: `team090final.zip`.
+- Contents:
+  - `README.txt` (this file): include DESCRIPTION, INSTALLATION, EXECUTION, and optionally a 1-minute unlisted demo video URL.
+  - `DOC/`: `team090report.pdf` and `team090poster.pdf`.
+  - `CODE/`: only the necessary source/data/outputs for the demo.
+Visit Canvas for the official upload instructions.
+
 End-to-end workflow
 -------------------
 Primary entry point (skip LSTM for faster processing):
