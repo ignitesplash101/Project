@@ -53,8 +53,8 @@ Environment setup (conda, recommended)
 --------------------------------------
 1) Create and activate the environment from `environment.yml`:
    ```
-   conda env create -f environment.yml
-   conda activate dva
+   conda env create -f environment.yml -n <env_name>
+   conda activate <env_name>
    ```
 2) Optional (only if you want to train LSTMs): install CPU PyTorch after activation:
    ```
