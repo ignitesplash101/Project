@@ -1,0 +1,16 @@
+Feature,MeanAbsSHAP,MedianAbsSHAP,StdAbsSHAP,ContributionShare
+mesh_median_ppsqm_lag1,0.0,0.0,0.0,0
+mesh_median_ppsqm_lag4,0.0,0.0,0.0,0
+mesh_median_ppsqm_growth_qoq,0.0,0.0,0.0,0
+mesh_median_ppsqm_growth_yoy,0.0,0.0,0.0,0
+mesh_median_ppsqm_ma4q,0.0,0.0,0.0,0
+mesh_median_ppsqm_std4q,0.0,0.0,0.0,0
+mesh_transaction_count,0.0,0.0,0.0,0
+mesh_avg_age,0.0,0.0,0.0,0
+mesh_avg_area,0.0,0.0,0.0,0
+TimeTrend,0.0,0.0,0.0,0
+Ward_encoded,0.0,0.0,0.0,0
+WardHedonicIndex,0.0,0.0,0.0,0
+WardHedonicIndex_missing,0.0,0.0,0.0,0
+MeshHedonicIndex,0.0,0.0,0.0,0
+MeshHedonicIndex_missing,0.0,0.0,0.0,0

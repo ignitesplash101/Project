@@ -20,20 +20,20 @@
 \maketitle
 
 \section{Introduction}
-Urban buyers, developers, and planners in Japan wait roughly three months for the Japan Residential Property Price Index (JRPPI), which also reports only broad regions\cite{jrppi2020,jrppi_timelag}. To close that gap, we build \emph{Hedonic Forecast}, a reproducible pipeline that converts 485,093 MLIT transactions\cite{mlit_data} into ward- and 250\,m mesh forecasts for Tokyo's 23 wards and Sendai.
+Urban buyers, developers, and planners in Japan wait roughly three months for the Japan Residential Property Price Index (JRPPI), which also reports only broad regions\cite{jrppi2020,jrppi_timelag}. To close that gap, we build \emph{Hedonic Forecast}, a reproducible pipeline that converts 485,093 Ministry of Land, Infrastructure, Transport and Tourism (MLIT) transactions\cite{mlit_data} into ward- and 250\,m mesh forecasts for Tokyo's 23 wards and Sendai.
 
-The pipeline pairs modelling with a Streamlit dashboard: choropleths, leaderboards, and SHapley Additive exPlanations (SHAP) give stakeholders both the numbers and the reasons behind them. In this paper the visuals are static, but every figure is generated from the same reproducible code. Four implemented choices underpin the system: (1) quarterly mesh hedonic indices that keep rows with missing building years via indicators instead of dropping data, (2) hierarchical forecasting where mesh models ingest ward medians/lags to stabilise sparse geographies, (3) direct mapping from MLIT coordinates to JIS \emph{X~0410} meshes without external geocoding\cite{stats_mesh,jshis_250m}, and (4) cold-start smoothing with moving averages/volatility so early-quarter predictions do not spike. These keep the experience interpretable while delivering ward MAE of 18,595~JPY/m$^2$.
+The pipeline pairs modelling with a Streamlit dashboard: choropleths, leaderboards, and SHapley Additive exPlanations (SHAP) give stakeholders both the numbers and the reasons behind them. In this paper the visuals are static, but every figure is generated from the same reproducible code. The system encompasses four main components: (1) quarterly mesh hedonic indices that keep rows with missing building years via indicators instead of dropping data, (2) hierarchical forecasting where mesh models ingest ward medians/lags to stabilise sparse geographies, (3) direct mapping from MLIT coordinates to JIS \emph{X~0410} meshes without external geocoding\cite{stats_mesh,jshis_250m}, and (4) cold-start smoothing that follows state-space ETS (Error, Trend, Seasonality) initialization so early-quarter predictions do not spike\cite{hyndman2002ets}. These keep the experience interpretable while delivering ward MAE of 18,595~JPY/m$^2$.
 
 \section{Problem Definition}
 
-We address three tasks: (1) construct quarterly hedonic price indices at ward/mesh levels summarizing spatiotemporal dynamics from 2005--2025; (2) predict next-quarter median JPY/m$^2$ using only information available at prediction time; (3) provide interpretable, interactive exploration of spatial patterns. 
+We address three main tasks: (1) construct quarterly hedonic price indices at ward/mesh levels summarizing spatiotemporal dynamics from 2005--2025; (2) predict next-quarter median JPY/m$^2$ using only information available at prediction time; (3) provide interpretable  visualizations of spatial patterns . 
 
-Inputs are MLIT arm's-length transactions (price, area, date, building year, location). Outputs include indices, one-step forecasts with uncertainty, and standard metrics---mean absolute error (MAE), root mean squared error (RMSE), and the coefficient of determination ($R^2$)---plus SHAP explanations for each prediction\cite{shap2017}. 
+Inputs are MLIT real-estate transaction features (price, area, date, building year, location). Outputs include computed indices, one-step forecasts with uncertainty, and standard metrics such as mean absolute error (MAE), root mean squared error (RMSE), and the coefficient of determination ($R^2$), also including SHAP explanations for each prediction\cite{hyndman2006,tashman2000,shap2017}. 
 
 Formally, letting $p_{l,t}$ denote the median price-per-square-meter for location $l$ at quarter $t$ and $x_{l,t}$ the engineered feature vector, we learn $f_l$ such that $\hat{p}_{l,t+1}=f_l(x_{l,t})$ by minimizing empirical mean squared error (MSE) subject to chronological splits (Train 2009--2019Q4, Val 2020Q1--2021Q4, Test 2022Q1--2025Q1). We additionally require $f_l$ to supply additive feature attributions (SHAP) for downstream trust.
 
 \section{Literature Survey}
-Japanese real estate forecasting has multiple problems. Official JRPPI indices \cite{jrppi2020} lag 2-3 months, rendering them less useful for investors and stakeholders who need timely signals. Academic models are generally split between spatial and temporal factor models: spatial ML \cite{spatial2021} ignores time, while temporal models such as LSTMs \cite{lstm2017} ignore location. Transformers have the potential to handle both but have high computational costs and ultimately prove difficult to interpret.
+Japanese real estate forecasting has multiple problems. Official JRPPI indices \cite{jrppi2020} lag 2-3 months, rendering them less useful for investors and stakeholders who need timely signals. Academic models are generally split between spatial and temporal factor models: spatial ML \cite{yoshida2024} ignores time, while temporal models such as LSTMs \cite{lstm2017} ignore location. Transformers have the potential to handle both but have high computational costs and ultimately prove difficult to interpret\cite{transformers_survey}.
 
 Research also shows that nearby transactions influence local prices \cite{spatiotemporal2023}, but modeling full spatial covariance structures is computationally intensive. We use mesh aggregation \cite{jsai2022}; a grid-based shortcut that captures neighborhood effects efficiently. For interpretability, we apply SHAP \cite{shap2017, lundberg2020nmi}, which quantifies the importance of characteristics in models including LSTMs \cite{shap_lstm2025}. Some articles have also proven that multivariate LSTMs that incorporate multiple input features consistently outperform univariate approaches in financial and economic forecasting \cite{multivariate_lstm2022}. Operational research on Tokyo's 23 wards also demonstrates practical MLIT data cleaning procedures and adaptive rolling windows \cite{hitotsubashi2023} which we will utilize in our approach to work with the dataset. Peng and Inoue \cite{peng2022} apply eigenvector spatial filtering to show that Tokyo housing prices reflect both local factors, such as nearby schools or train stations, and regional effects across wards. This highlights the need for multi-scale spatial features in our forecasting models, though their study is mainly explanatory rather than predictive.
 
@@ -44,7 +44,7 @@ Overall, this review reveals multiple gaps in existing literature. Official pric
 \subsection{Data and Preprocessing}
 We cleaned a total of 485,093 MLIT transactions (2005-Q3 to 2025-Q1) across Tokyo's 23 wards and Sendai's main wards, covering $\sim$3,000+ unique 250\,m meshes. Data cleaning addressed full-width numerals, Japanese era calendars, and missing building years (median-imputed by ward with \texttt{AgeUnknown} indicator). Spatial encoding derives \emph{JIS X~0410} 250\,m mesh codes directly from MLIT transaction coordinates (lat/lon), then collapses to district-quarter medians. A ward-centroid fallback is then applied if coordinates are missing. This avoids separate geocoding and reduces processing overheads substantially\cite{mlit_data,stats_mesh,jshis_250m}. Two panels are created as a result: ward$\times$quarter (28 wards) and mesh$\times$quarter, each with a set of median/dispersion price metrics, transaction counts, building statistics, and temporal keys.
 
-\noindent The MLIT endpoint mixes structured and semi-structured values, so we normalize numerals, harmonize era dates to Gregorian quarters, and standardize areas to square meters. Transactions with blank coordinates trigger a ward-level centroid fallback so every row inherits a mesh code, while a secondary fallback copies the most recent valid mesh code when MLIT suppresses coordinates for privacy. These steps keep the spatial grid dense even when lat/lon are missing.
+\noindent The MLIT endpoint mixes structured and semi-structured values, so we normalize numerals, harmonize Japanese era dates to Gregorian quarters, and standardize areas to square meters. Transactions with blank coordinates trigger a ward-level centroid fallback so every row inherits a mesh code, while a secondary fallback copies the most recent valid mesh code when the MLIT dataset suppresses coordinates for privacy. These steps keep the spatial grid sufficiently dense even when lat/lon values are missing.
 
 \begin{table}[H]
 \centering
@@ -66,16 +66,32 @@ Train/Val/Test (Mesh) & 26,818 / 6,337 / 4,762 \\
 \subsection{Intuition}
 Recent real-estate forecasting efforts in Japan tend to emphasize a single model family. Yoshida and Seya~\cite{yoshida2024} benchmark linear regression against gradient boosted trees using macro/static predictors, while Otsuki~\cite{hitotsubashi2023} focuses on data-cleaning heuristics without combining interpretable and neural approaches. Existing LSTM work on housing~\cite{lstm2017} largely treats the task as univariate sequence prediction, and most studies lack feature-level explanations to justify deployment~\cite{shap2017, lundberg2020nmi}.
 
-Our approach deliberately blends complementary ideas so the reader can trace why each choice improves stability or transparency:
+Our approach attempts to blend complementary ideas so the user can trace why each choice improves stability or transparency:
 \begin{itemize}[leftmargin=*]
     \item \textbf{Hierarchical hedonic context.} We rebuild ward and mesh hedonic indices every quarter and propagate ward-level scores down to meshes with explicit missingness flags. This mirrors the fixed-effects intuition of Otsuki~\cite{hitotsubashi2023} while keeping the higher spatial resolution that policy makers care about.
     \item \textbf{Model diversity.} Instead of betting on a single learner, we train linear, tree-based, and LSTM sequence models. This lets us quantify when simple momentum suffices (wards) versus when nonlinear interactions dominate (meshes), and gives stakeholders the option to trade accuracy for speed or transparency.
-    \item \textbf{Built-in interpretability.} Every model, including the LSTMs, is paired with SHAP exports (CSV + PNG) so analysts can see which features drive a forecast. This directly addresses the interpretability gap highlighted in SHAP literature~\cite{shap2017,lundberg2020nmi} and is largely absent from prior Japanese housing studies.
-    \item \textbf{Software packaging.} All analyses run from the command line, which makes the project reproducible and attractive to other teams or agencies that wish to build on our work.
+    \item \textbf{Built-in interpretability.} Every model, including the LSTMs, is paired with SHAP exports (CSV + PNG files) so analysts can see which features drive a forecast. This directly addresses the interpretability gap highlighted in SHAP literature~\cite{shap2017,lundberg2020nmi} and is largely absent from prior Japanese housing studies.
+\item \textbf{Software packaging.} Once datasets are scraped and processed from the MLIT API, All analyses run from the command line, which makes the project reproducible and attractive to other teams or agencies that wish to build on our work.
 \end{itemize}
 
 We keep the feature sets compact by design. Fifteen ward features capture price momentum (lags, moving averages), liquidity (transaction counts), and structural signals (age, area) without overfitting the $\sim$1.7k ward samples, while the 13+ mesh features add hedonic indices and missingness flags to stabilise sparse grids. This balance is enough to outperform naive lag/MA baselines (evaluated in the workflow) while preserving interpretability.
 
+\subsection{Reproducibility and Workflow}
+All figures and tables come from the CLI pipeline in \texttt{CODE/}: \texttt{python -m CODE.run\_workflow} rebuilds panels, trains models with the stated splits, exports SHAP, and writes outputs to \texttt{CODE/outputs/}. Efficiency tables use \texttt{python -m CODE.experiments --levels Ward Mesh --fractions 0.25 0.5 0.75 1.0}.
+
+\subsection{Interactive Dashboard}
+The Streamlit dashboard exposes the same artifacts used in the paper through three panes: (1) a mesh-250\,m choropleth with quarter auto-play, city/model selectors, and metric toggles (price index, median/mean JPY/m$^2$, transaction counts, age, area); (2) a leaderboard sourced from \texttt{outputs/model\_results.csv} that highlights the top model and surfaces MAE/RMSE/$R^2$; and (3) SHAP explainability that pairs global bar/beeswarm plots with local force/waterfall views drawn from \texttt{mesh\_\{model\}\_val\_shap.pkl}. Figure~\ref{fig:dashboard} illustrates the choropleth and sidebar controls that drive these panels.
+
+\begin{figure}[H]
+\centering
+\IfFileExists{dashboard.png}{%
+    \includegraphics[width=\linewidth]{dashboard.png}%
+}{%
+    \fbox{\parbox{0.9\linewidth}{\centering Dashboard screenshot placeholder (mesh map, leaderboard, SHAP panels).\linebreak Add \texttt{visualisation/dashboard.png} to replace.}}%
+}
+\caption{Streamlit dashboard: mesh-250\,m choropleth with sidebar controls, leaderboard, and SHAP panels.}
+\label{fig:dashboard}
+\end{figure}
 \subsection{Detailed Description}
 \textbf{Hedonic price index.} We estimate municipality-level indices using two-way fixed effects (PanelOLS):
 \begin{equation}
@@ -157,39 +173,23 @@ Structure & \texttt{mesh\_avg\_age}, \texttt{mesh\_avg\_area} \\
 \end{tabular}
 \end{table}
 
-Models use fixed caps for reproducibility: RF (300 trees), LightGBM (600 trees), LSTM window 8 quarters with hidden 96, dropout 0.3, and early stopping patience 8. SHAP uses the full validation set for metric computation and caps only the explainer sampling for speed (trees 500 rows, linear 200 rows, LSTM 120 sequences, plots 1,000 rows) so Sendai's small-sample tails stay visible while keeping runtimes manageable. Models themselves train on all available data, and every artifact lands in \texttt{final\_code/outputs/} for auditability.
-
-Linear Regression, Random Forest (300 estimators), and LightGBM (600 estimators) live in \texttt{models.py}. SHAP exports sample up to 150 rows per level/model via \texttt{shap\_utils.py}, producing both CSVs and bar/beeswarm PNGs under \texttt{final\_code/outputs/shap\_plots/}.
-
-The full workflow is scripted in \texttt{run\_workflow.py}, which regenerates panels, hedonic indices, model fits, metrics, and plots into \texttt{final\_code/outputs/} so results are reproducible end-to-end. No manual notebooks or demo videos are required.
+Models use a set of arbitrary SHAP caps in order to avoid long running computations: RF (300 trees), LightGBM (600 trees), LSTM window 8 quarters with hidden 96, dropout 0.3, and early stopping patience 8. SHAP uses the full validation set for metric computation and caps only the explainer sampling for speed (trees 500 rows, linear 200 rows, LSTM 120 sequences, plots 1,000 rows) so Sendai's small-sample tails stay visible while keeping runtimes manageable. Models themselves train on all available data.
 
 \section{Evaluation}
 
 \subsubsection*{Testbed Description}
-We benchmark our models on ward- and mesh-level condominium price panels for Tokyo's 23 wards and Sendai (2009--2025). Ward models use 15 engineered features capturing price momentum, liquidity, and structural attributes; mesh models extend that list with hedonic indices and missingness indicators to stabilize sparse grids. All forecasts use chronological splits:
-\begin{equation}
-\label{eq:splits}
-\small
-\begin{aligned}
-\text{Train: } & 2009\text{--}2019\text{Q4}, \quad \text{Val: } 2020\text{Q1--}2021\text{Q4},\\
-\text{Test: } & 2022\text{Q1--}2025\text{Q1}
-\end{aligned}
-\end{equation}
-so the validation/test dates never leak future information. Linear Regression, Random Forest, LightGBM, and the PyTorch LSTM are trained with one-step-ahead targets. Missing early-lag values are zero-filled and paired with moving-average proxies so each model can emit predictions from the first quarter onward. SHAP values are computed on validation slices and surfaced through the dashboard so analysts can interrogate predictions without leaving the interface; figures and tables are placed near the text to avoid spillover in the two-column layout.
+Ward and mesh panels cover Tokyo's 23 wards and Sendai (2009--2025). Ward models use 15 momentum/liquidity/structure features; meshes add hedonic indices and missingness flags. Chronological splits are fixed (Train 2009--2019Q4, Val 2020Q1--2021Q4, Test 2022Q1--2025Q1) to prevent leakage. All models predict one quarter ahead; early lags are initialized with short moving averages (state-space ETS) so forecasts start in the first quarter\cite{hyndman2002ets}. SHAP is computed on validation slices and surfaced alongside metrics; LSTM timing is excluded from efficiency tables because sequence training and SHAP export are orders slower and hardware-dependent.
 
 \subsubsection*{Key Findings}
-
 \begin{enumerate}
-    \item \textbf{Feature importance.} Momentum dominates (Fig.~\ref{fig:shap-beeswarm}). In both Tokyo and Sendai, four-quarter moving averages and one-quarter lags account for most SHAP mass, with quarter-over-quarter growth next; structural variables sit in the long tail. Mesh Random Forest plots echo this pattern, with hedonic indices and missingness flags only after the main trend features. LSTM SHAP mirrors the same cues, which explains why it adds little lift on sparse meshes.
+    \item \textbf{Feature importance.} Momentum dominates (Fig.~\ref{fig:shap-beeswarm}). In both Tokyo and Sendai, four-quarter moving averages and one-quarter lags carry most SHAP mass; QoQ/YoY growth follows. Structural variables sit in the long tail. Mesh Random Forest plots echo this pattern, with hedonic indices and missingness flags mattering only when mesh history is thin. LSTM SHAP mirrors the same cues, which explains why it adds little lift on sparse meshes. The mild negative skew in Sendai (mesh RF, ward LightGBM/LSTM) reflects the designed fallbacks: forecasts damp when local momentum is weak, leaning on ward priors instead of overreacting.
     
     \item \textbf{Accuracy across scales.} Tested on 2022--2025, ward Linear Regression achieves the lowest MAE (18.6k JPY/m$^2$) with $R^2=0.995$ (Table~\ref{tab:ward-accuracy}). Nonlinear models offer marginal gains at the ward scale but matter at the mesh scale: Random Forest slashes mesh MAE from 83.9k (linear) to 22.6k JPY/m$^2$ with $R^2=0.95$ (Table~\ref{tab:mesh-accuracy}).
     
-    \item \textbf{Granularity trade-offs.} Comparing ward and mesh metrics shows that higher resolution introduces heavier error tails but reveals neighbourhood hotspots that ward medians smooth away. The dashboard exposes both scales simultaneously so analysts can choose the fidelity that matches their decision.
+    \item \textbf{Granularity trade-offs.} Comparing ward and mesh metrics shows that higher resolution introduces heavier error tails but also reveals neighbourhood hotspots that ward medians smooth away. The dashboard exposes both scales simultaneously so analysts can choose the fidelity that matches their decision.
+    \item \textbf{Efficiency and scaling.} We stress-test the classical models by training on 25\%, 50\%, 75\%, and 100\% of historical rows. Appendix Tables~\ref{tab:ward-efficiency} and \ref{tab:mesh-efficiency} summarize the runtime/accuracy trade-offs. Linear Regression offers near-instant inference regardless of training fraction, Random Forest incurs tens of milliseconds per forecast yet delivers the best accuracy-time balance once data coverage exceeds 50\%, and LightGBM sits between them. LSTM timing is excluded because sequence training and SHAP export are orders slower and depend on hardware.
 
-\item \textbf{Efficiency and scaling.} We stress-test the workflow by training on 25\%, 50\%, 75\%, and 100\% of historical rows. Tables~\ref{tab:ward-efficiency} and \ref{tab:mesh-efficiency} summarize the runtime/accuracy trade-offs. Linear Regression offers near-instant inference regardless of training fraction, while Random Forest incurs tens of milliseconds per forecast yet delivers the best accuracy-time balance once data coverage exceeds 50\%. The paired tables are set to the same font/width so readers can compare levels without layout shifts.
 \end{enumerate}
-
-Naive lag-1 and four-quarter moving-average baselines (computed in the workflow) trail all ML models on both levels, so the reported tables focus on the stronger learners.
 
 \begin{table}[H]
 \centering
@@ -225,9 +225,142 @@ Torch LSTM        & 103{,}143 & 324{,}578 & 0.664 \\
 \end{tabular}
 \end{table}
 
-Linear models remain strongest for wards because momentum alone explains nearly all the variance. Meshes benefit from nonlinear splits that capture interactions between hedonic indices, lags, and missingness flags; hence Random Forest leads and LightGBM follows closely. The LSTM struggles on meshes because short sequences and limited spatial context make it hard to generalise beyond momentum, and Sendai's small sample triggers LightGBM split warnings—so we prefer Random Forest for Sendai deployment.
-
+Linear models remain strongest for wards because momentum alone explains nearly all the variance. Meshes benefit from nonlinear splits that capture interactions between hedonic indices, lags, and missingness flags; hence Random Forest leads and LightGBM follows closely. The LSTM struggles on meshes because short sequences and limited spatial context make it hard to generalise beyond momentum, and Sendai's small sample triggers LightGBM split warnings, so we prefer Random Forest for Sendai deployment. Ward forecasts can lean on Linear Regression for sub-millisecond updates when latency matters, while meshes warrant Random Forest because its accuracy gains outweigh a few extra milliseconds once training coverage exceeds 50%.
 \FloatBarrier
+\noindent Figure~\ref{fig:shap-beeswarm} shows city-split SHAP beeswarms for the tree models (ward LightGBM, mesh Random Forest) plus the available LSTM variants. Mesh LSTM SHAP is provided for Tokyo (validation) and the full test set; a Sendai-specific mesh LSTM plot was not generated.
+
+\begin{figure*}[t]
+\centering
+\begin{minipage}{0.23\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{shap_plots/ward_lightgbm_val_tokyo_beeswarm.png}
+    \caption*{Tokyo Ward LightGBM}
+\end{minipage}\hfill
+\begin{minipage}{0.23\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{shap_plots/ward_lightgbm_val_sendai_beeswarm.png}
+    \caption*{Sendai Ward LightGBM}
+\end{minipage}\hfill
+\begin{minipage}{0.23\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{shap_plots/mesh_randomforest_val_tokyo_beeswarm.png}
+    \caption*{Tokyo Mesh RF}
+\end{minipage}\hfill
+\begin{minipage}{0.23\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{shap_plots/mesh_randomforest_val_sendai_beeswarm.png}
+    \caption*{Sendai Mesh RF}
+\end{minipage}
+
+\vspace{0.5em}
+\begin{minipage}{0.23\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{shap_plots/ward_torchlstm_val_tokyo_beeswarm.png}
+    \caption*{Tokyo Ward LSTM}
+\end{minipage}\hfill
+\begin{minipage}{0.23\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{shap_plots/ward_torchlstm_val_sendai_beeswarm.png}
+    \caption*{Sendai Ward LSTM}
+\end{minipage}\hfill
+\begin{minipage}{0.23\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{shap_plots/mesh_torchlstm_val_tokyo_beeswarm.png}
+    \caption*{Tokyo Mesh LSTM}
+\end{minipage}\hfill
+\caption{City-split SHAP beeswarms for ward LightGBM, mesh Random Forest, and LSTM variants. Momentum dominates; Sendai shows wider spreads and mild negative skew where data are sparse. Mesh LSTM SHAP uses Tokyo validation and overall test (no Sendai-specific mesh LSTM SHAP available).}
+\label{fig:shap-beeswarm}
+\end{figure*}
+
+Across model families (Linear Regression, Random Forest, LightGBM, and LSTM) the SHAP beeswarms in Fig.~\ref{fig:shap-beeswarm} give a consistent feature hierarchy. The four-quarter moving average of prices dominates with the widest SHAP spread, followed by one- and four-quarter lags; QoQ/YoY growth ranks next, especially on meshes where local series are noisy. Structural signals (age, size, transaction counts), spatial identifiers, and hedonic indices cluster around zero, implying limited marginal impact once momentum is present. This pattern shows the models behaving like compact autoregressive forecasters whose predictive power comes primarily from recent price trajectories, with smooth trends and short-run momentum carrying far more weight than static structure or location labels.
+
+Drilling deeper, ward LightGBM shows mild negative SHAP mass for average age and near-zero impact for counts, confirming structural nuance adds little once momentum is known. Mesh Random Forest has a small bump for \texttt{WardHedonicIndex} where mesh lags are sparse; its missingness flag adds a bounded positive push, signalling deference to ward context during cold starts. Tokyo meshes exhibit tighter SHAP clouds than Sendai; Sendai shows wider QoQ spread and mild negative skew in mesh RF and ward LightGBM/LSTM, consistent with thin-sample regularisation when local momentum is weak. LSTM SHAP mirrors the tree rankings, largely relearning momentum.
+
+\section{Conclusions and Discussion}
+Hedonic Forecast demonstrates that a data-clean hedonic pipeline plus lightweight modelling can close the three-month information gap that plagues Japan's official indices. By combining ward baselines, mesh ensembles, SHAP narratives, and an interactive dashboard, we deliver forecasts that are both accurate (ward MAE 18.6k~JPY/m$^2$, mesh MAE 22.6k~JPY/m$^2$) and explainable to practitioners who are new to machine learning. The visual layer keeps non-technical stakeholders in the loop by highlighting which features move prices in each geography, and the code path from raw MLIT inputs to plots is fully scripted for reproducibility.
+
+Limitations remain. MLIT releases omit micro amenities, so nonlinear models still default to lag structure; we could buy REINS listings, prototype SUUMO scraping with ToS care, and merge OpenStreetMap POIs. LightGBM was unstable on Sendai's small sample, so default to Random Forest for Sendai meshes/wards. Automating quarterly reruns, adding conformal prediction intervals, and ablating hedonic fallbacks or residual spatial autocorrelation (e.g., Moran's I) would tighten robustness in future work.
+
+
+\noindent All team members contributed equally to all aspects of the project and report writing.
+
+
+\bibliographystyle{apalike}
+\begin{thebibliography}{99}
+
+\bibitem{mlit_data}
+Ministry of Land, Infrastructure, Transport and Tourism (MLIT). (2005--present). \textit{Real Estate Information Library}. Retrieved from \url{https://www.reinfolib.mlit.go.jp/}
+
+\bibitem{jrppi2020}
+Ministry of Land, Infrastructure, Transport and Tourism, Real Estate and Construction Economy Bureau. (2020). \textit{Methodology of JRPPI: Japan Residential Property Price Index}. Retrieved from \url{https://www.mlit.go.jp/common/001360414.pdf}
+
+\bibitem{jrppi_timelag}
+Ministry of Land, Infrastructure, Transport and Tourism. (2015). \textit{Japan Residential Property Price Index and Residential Transaction Volume (August 2015)}. See p.~6: ``Time lag: About 3 months'' and coverage by geography. Retrieved from \url{https://www.mlit.go.jp/common/001110934.pdf}
+
+\bibitem{yoshida2024}
+Yoshida, T., \& Seya, H. (2024). Spatial prediction of apartment rent using regression-based and machine learning-based approaches with a large dataset. \textit{The Journal of Real Estate Finance and Economics}, \textit{69}(1), 1--28. \url{https://doi.org/10.1007/s11146-022-09929-6}
+
+\bibitem{lstm2017}
+Chen, X., Wei, L., \& Xu, J. (2017). House price prediction using LSTM. \textit{arXiv preprint arXiv:1709.08432}. \url{https://arxiv.org/abs/1709.08432}
+
+\bibitem{hyndman2002ets}
+Hyndman, R. J., Koehler, A. B., Snyder, R. D., \& Grose, S. (2002). A state space framework for automatic forecasting using exponential smoothing methods. \textit{International Journal of Forecasting}, \textit{18}(3), 439--454. \url{https://www.sciencedirect.com/science/article/pii/S0169207001001108}
+
+\bibitem{c}
+Haque, D. (2024). Transforming Japan real estate. \textit{arXiv preprint arXiv:2405.20715}. \url{https://arxiv.org/abs/2405.20715}
+
+\bibitem{transformers_survey}
+Wen, Q., Zhou, T., Zhang, C., Chen, W., Ma, Z., Yan, J., \& Sun, L. (2023). Transformers in time series: A survey. In \textit{Proceedings of IJCAI 2023} (Survey Track). \url{https://www.ijcai.org/proceedings/2023/0759.pdf}
+
+\bibitem{spatiotemporal2023}
+Muto, S., Sugasawa, S., \& Suzuki, M. (2023). Hedonic real estate price estimation with the spatiotemporal geostatistical model. \textit{Journal of Spatial Econometrics}. \url{https://link.springer.com/article/10.1007/s43071-023-00039-w}
+
+\bibitem{jsai2022}
+Mizuho Research \& Technologies, Ltd. (2022). \textit{Prediction of land prices using machine learning with mesh-based neighbor features}. JSAI Special Interest Group on Financial Informatics (SIG-FIN-029-61). Retrieved from \url{https://www.jstage.jst.go.jp/article/jsaisigtwo/2022/FIN-029/2022_61/_pdf}
+
+\bibitem{stats_mesh}
+Statistics Bureau of Japan. (n.d.). \textit{The Standard Grid Square and the Grid Square Code used for the Statistics}. Retrieved from \url{https://www.stat.go.jp/english/data/mesh/02.html}
+
+\bibitem{jshis_250m}
+National Research Institute for Earth Science and Disaster Resilience (NIED). (n.d.). \textit{What is the 250m-mesh code?} J-SHIS FAQ. Retrieved from \url{https://www.j-shis.bosai.go.jp/en/faq-250mmesh}
+
+\bibitem{hitotsubashi2023}
+Otsuki, K. (2023). \textit{A Study on Data-Cleansing Methods and Model-Update Algorithms for Real Estate Price Forecasting Models} [Doctoral dissertation, Hitotsubashi University]. Hitotsubashi University Repository. \url{https://hit-u.repo.nii.ac.jp/records/2048234}
+
+\bibitem{shap2017}
+Lundberg, S. M., \& Lee, S.-I. (2017). A unified approach to interpreting model predictions. In \textit{Advances in Neural Information Processing Systems 30} (pp. 4765--4774). \url{https://arxiv.org/abs/1705.07874}
+
+\bibitem{lundberg2020nmi}
+Lundberg, S. M., Erion, G., Chen, H., DeGrave, A., Prutkin, J. M., Nair, B., Katz, R., Himmelfarb, J., Bansal, N., \& Lee, S.-I. (2020). From local explanations to global understanding with explainable AI for trees. \textit{Nature Machine Intelligence}, \textit{2}(1), 56--67. \url{https://doi.org/10.1038/s42256-019-0138-9}
+
+\bibitem{shap_lstm2025}
+Sen, D., Deora, B. S., \& Vaishnav, A. (2025). Explainable deep learning for time series analysis: Integrating SHAP and LIME in LSTM-based models. \textit{Journal of Information Systems Engineering and Management}, \textit{10}(16s). \url{https://jisem-journal.com/index.php/journal/article/view/2627}
+
+\bibitem{multivariate_lstm2022}
+Kuber, V., Yadav, D., \& Yadav, A. K. (2022). Univariate and multivariate LSTM model for short-term stock market prediction. \textit{arXiv preprint arXiv:2205.06673}. \url{https://arxiv.org/abs/2205.06673}
+
+\bibitem{hyndman2006}
+Hyndman, R. J., \& Koehler, A. B. (2006). Another look at measures of forecast accuracy. \textit{International Journal of Forecasting}, \textit{22}(4), 679--688. \url{https://robjhyndman.com/papers/mase.pdf}
+
+\bibitem{tashman2000}
+Tashman, L. J. (2000). Out-of-sample tests of forecasting accuracy: An analysis and review. \textit{International Journal of Forecasting}, \textit{16}(4), 437--450. \url{https://www.sciencedirect.com/science/article/pii/S0169207000000650}
+
+\bibitem{peng2022}
+Peng, Z., \& Inoue, R. (2022). Identifying multiple scales of spatial heterogeneity in housing prices based on eigenvector spatial filtering approaches. \textit{ISPRS International Journal of Geo-Information}, \textit{11}(5), 283. \url{https://doi.org/10.3390/ijgi11050283}
+
+\end{thebibliography}vi
+
+\appendix
+\section{Appendix}
+\setcounter{table}{0}
+\setcounter{figure}{0}
+\renewcommand{\thetable}{A\arabic{table}}
+\renewcommand{\thefigure}{A\arabic{figure}}
+\subsection{Efficiency Tables}
+
+Tables~\ref{tab:ward-efficiency} and \ref{tab:mesh-efficiency} report inference-time scaling for the classical models (Linear Regression, Random Forest, LightGBM) at 25\%, 50\%, 75\%, and 100\% of training data. LSTM timing is excluded because sequence training and SHAP export are orders slower and hardware-dependent.
+
+\newpage{}
 \begin{table*}[t]
     \centering
     \scriptsize
@@ -283,128 +416,5 @@ Linear models remain strongest for wards because momentum alone explains nearly 
     \hline
     \end{tabular}
 \end{table*}
-
-\noindent Inference considerations: ward forecasts can rely on Linear Regression for sub-millisecond updates when latency dominates, while meshes warrant Random Forest because its accuracy gains outweigh tens of milliseconds of extra compute once training coverage exceeds 50\%.
-
-\FloatBarrier
-\noindent Figure~\ref{fig:shap-beeswarm} shows city-split SHAP beeswarms for the tree models (ward LightGBM, mesh Random Forest) plus the available LSTM variants. Mesh LSTM SHAP is provided for Tokyo (validation) and the full test set; a Sendai-specific mesh LSTM plot was not generated.
-
-\begin{figure*}[t]
-\centering
-\begin{minipage}{0.23\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{shap_plots/ward_lightgbm_val_tokyo_beeswarm.png}
-    \caption*{Tokyo Ward LightGBM}
-\end{minipage}\hfill
-\begin{minipage}{0.23\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{shap_plots/ward_lightgbm_val_sendai_beeswarm.png}
-    \caption*{Sendai Ward LightGBM}
-\end{minipage}\hfill
-\begin{minipage}{0.23\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{shap_plots/mesh_randomforest_val_tokyo_beeswarm.png}
-    \caption*{Tokyo Mesh RF}
-\end{minipage}\hfill
-\begin{minipage}{0.23\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{shap_plots/mesh_randomforest_val_sendai_beeswarm.png}
-    \caption*{Sendai Mesh RF}
-\end{minipage}
-
-\vspace{0.5em}
-\begin{minipage}{0.23\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{shap_plots/ward_torchlstm_val_tokyo_beeswarm.png}
-    \caption*{Tokyo Ward LSTM}
-\end{minipage}\hfill
-\begin{minipage}{0.23\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{shap_plots/ward_torchlstm_val_sendai_beeswarm.png}
-    \caption*{Sendai Ward LSTM}
-\end{minipage}\hfill
-\begin{minipage}{0.23\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{shap_plots/mesh_torchlstm_val_tokyo_beeswarm.png}
-    \caption*{Tokyo Mesh LSTM}
-\end{minipage}\hfill
-\begin{minipage}{0.23\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{shap_plots/mesh_torchlstm_test_beeswarm.png}
-    \caption*{Mesh LSTM (test overall)}
-\end{minipage}
-\caption{City-split SHAP beeswarms for the tree models (ward LightGBM, mesh Random Forest) plus LSTM variants. Momentum features dominate both cities; Sendai plots show slightly higher weight on quarter-over-quarter growth given sparser samples, while hedonic indices remain in the long tail. LSTMs largely relearn the same trend cues; mesh LSTM SHAP uses Tokyo validation and overall test (no Sendai-specific mesh LSTM SHAP available).}
-\label{fig:shap-beeswarm}
-\end{figure*}
-
-\section{Conclusions and Discussion}
-Hedonic Forecast demonstrates that a data-clean hedonic pipeline plus lightweight modelling can close the three-month information gap that plagues Japan's official indices. By combining ward baselines, mesh ensembles, SHAP narratives, and an interactive dashboard, we deliver forecasts that are both accurate (ward MAE 18.6k~JPY/m$^2$, mesh MAE 22.6k~JPY/m$^2$) and explainable to practitioners who are new to machine learning. The visual layer keeps non-technical stakeholders in the loop by highlighting which features move prices in each geography, and the code path from raw MLIT inputs to plots is fully scripted for reproducibility.
-
-Limitations remain. MLIT releases omit micro amenities (schools, transit frictions), so nonlinear models still default to lag structure; pulling in OpenStreetMap or MLIT's land-use registries could close that gap. LightGBM showed instability on Sendai's small sample, so the deployment default should favour Random Forest for Sendai meshes/wards. Inference currently runs offline; automating quarterly reruns and keeping the dashboard refreshed would help new collaborators. Adding prediction intervals would further improve transparency for risk-sensitive users.
-
-
-\noindent All team members contributed equally to all aspects of the project and report writing.
-
-\bibliographystyle{apalike}
-\begin{thebibliography}{99}
-
-\bibitem{mlit_data}
-Ministry of Land, Infrastructure, Transport and Tourism (MLIT). (2005--present). \textit{Real Estate Information Library}. Retrieved from \url{https://www.reinfolib.mlit.go.jp/}
-
-\bibitem{jrppi2020}
-Ministry of Land, Infrastructure, Transport and Tourism, Real Estate and Construction Economy Bureau. (2020). \textit{Methodology of JRPPI: Japan Residential Property Price Index}. Retrieved from \url{https://www.mlit.go.jp/common/001360414.pdf}
-
-\bibitem{jrppi_timelag}
-Ministry of Land, Infrastructure, Transport and Tourism. (2015). \textit{Japan Residential Property Price Index and Residential Transaction Volume (August 2015)}. See p.~6: ``Time lag: About 3 months'' and coverage by geography. Retrieved from \url{https://www.mlit.go.jp/common/001110934.pdf}
-
-\bibitem{yoshida2024}
-Yoshida, T., \& Seya, H. (2024). Spatial prediction of apartment rent using regression-based and machine learning-based approaches with a large dataset. \textit{The Journal of Real Estate Finance and Economics}, \textit{69}(1), 1--28. \url{https://doi.org/10.1007/s11146-022-09929-6}
-
-\bibitem{lstm2017}
-Chen, X., Wei, L., \& Xu, J. (2017). House price prediction using LSTM. \textit{arXiv preprint arXiv:1709.08432}. \url{https://arxiv.org/abs/1709.08432}
-
-\bibitem{c}
-Haque, D. (2024). Transforming Japan real estate. \textit{arXiv preprint arXiv:2405.20715}. \url{https://arxiv.org/abs/2405.20715}
-
-\bibitem{transformers_survey}
-Wen, Q., Zhou, T., Zhang, C., Chen, W., Ma, Z., Yan, J., \& Sun, L. (2023). Transformers in time series: A survey. In \textit{Proceedings of IJCAI 2023} (Survey Track). \url{https://www.ijcai.org/proceedings/2023/0759.pdf}
-
-\bibitem{spatiotemporal2023}
-Muto, S., Sugasawa, S., \& Suzuki, M. (2023). Hedonic real estate price estimation with the spatiotemporal geostatistical model. \textit{Journal of Spatial Econometrics}. \url{https://link.springer.com/article/10.1007/s43071-023-00039-w}
-
-\bibitem{jsai2022}
-Mizuho Research \& Technologies, Ltd. (2022). \textit{機械学習を用いた土地価格の予測 [Prediction of Land Prices Using Machine Learning with Mesh-Based Neighbor Features ]}. JSAI Special Interest Group on Financial Informatics (SIG-FIN-029-61). Retrieved from \url{https://www.jstage.jst.go.jp/article/jsaisigtwo/2022/FIN-029/2022_61/_pdf}
-
-\bibitem{stats_mesh}
-Statistics Bureau of Japan. (n.d.). \textit{The Standard Grid Square and the Grid Square Code used for the Statistics}. Retrieved from \url{https://www.stat.go.jp/english/data/mesh/02.html}
-
-\bibitem{jshis_250m}
-National Research Institute for Earth Science and Disaster Resilience (NIED). (n.d.). \textit{What is the 250m-mesh code?} J-SHIS FAQ. Retrieved from \url{https://www.j-shis.bosai.go.jp/en/faq-250mmesh}
-
-\bibitem{hitotsubashi2023}
-Otsuki, K. (2023). \textit{A Study on Data-Cleansing Methods and Model-Update Algorithms for Real Estate Price Forecasting Models} [Doctoral dissertation, Hitotsubashi University]. Hitotsubashi University Repository. \url{https://hit-u.repo.nii.ac.jp/records/2048234}
-
-\bibitem{shap2017}
-Lundberg, S. M., \& Lee, S.-I. (2017). A unified approach to interpreting model predictions. In \textit{Advances in Neural Information Processing Systems 30} (pp. 4765--4774). \url{https://arxiv.org/abs/1705.07874}
-
-\bibitem{lundberg2020nmi}
-Lundberg, S. M., Erion, G., Chen, H., DeGrave, A., Prutkin, J. M., Nair, B., Katz, R., Himmelfarb, J., Bansal, N., \& Lee, S.-I. (2020). From local explanations to global understanding with explainable AI for trees. \textit{Nature Machine Intelligence}, \textit{2}(1), 56--67. \url{https://doi.org/10.1038/s42256-019-0138-9}
-
-\bibitem{shap_lstm2025}
-Sen, D., Deora, B. S., \& Vaishnav, A. (2025). Explainable deep learning for time series analysis: Integrating SHAP and LIME in LSTM-based models. \textit{Journal of Information Systems Engineering and Management}, \textit{10}(16s). \url{https://jisem-journal.com/index.php/journal/article/view/2627}
-
-\bibitem{multivariate_lstm2022}
-Kuber, V., Yadav, D., \& Yadav, A. K. (2022). Univariate and multivariate LSTM model for short-term stock market prediction. \textit{arXiv preprint arXiv:2205.06673}. \url{https://arxiv.org/abs/2205.06673}
-
-\bibitem{hyndman2006}
-Hyndman, R. J., \& Koehler, A. B. (2006). Another look at measures of forecast accuracy. \textit{International Journal of Forecasting}, \textit{22}(4), 679--688. \url{https://robjhyndman.com/papers/mase.pdf}
-
-\bibitem{tashman2000}
-Tashman, L. J. (2000). Out-of-sample tests of forecasting accuracy: An analysis and review. \textit{International Journal of Forecasting}, \textit{16}(4), 437--450. \url{https://www.sciencedirect.com/science/article/pii/S0169207000000650}
-
-\bibitem{peng2022}
-Peng, Z., \& Inoue, R. (2022). Identifying multiple scales of spatial heterogeneity in housing prices based on eigenvector spatial filtering approaches. \textit{ISPRS International Journal of Geo-Information}, \textit{11}(5), 283. \url{https://doi.org/10.3390/ijgi11050283}
-
-\end{thebibliography}
 
 \end{document}

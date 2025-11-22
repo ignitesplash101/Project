@@ -1,0 +1,16 @@
+Feature,MeanAbsSHAP,MedianAbsSHAP,StdAbsSHAP,ContributionShare
+MedianPriceSqM_lag1,0.0,0.0,0.0,0
+MedianPriceSqM_lag4,0.0,0.0,0.0,0
+MedianPriceSqM_growth_qoq,0.0,0.0,0.0,0
+MedianPriceSqM_growth_yoy,0.0,0.0,0.0,0
+MedianPriceSqM_ma4q,0.0,0.0,0.0,0
+MedianPriceSqM_std4q,0.0,0.0,0.0,0
+TransactionCount,0.0,0.0,0.0,0
+AvgBuildingAge,0.0,0.0,0.0,0
+AvgArea,0.0,0.0,0.0,0
+ActiveMeshes,0.0,0.0,0.0,0
+TimeTrend,0.0,0.0,0.0,0
+Ward_encoded,0.0,0.0,0.0,0
+Q_2,0.0,0.0,0.0,0
+Q_3,0.0,0.0,0.0,0
+Q_4,0.0,0.0,0.0,0
