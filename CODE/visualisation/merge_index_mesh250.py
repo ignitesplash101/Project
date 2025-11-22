@@ -1,16 +1,12 @@
 import pandas as pd
-import pandas as pd
 import geopandas as gpd
 from shapely.geometry import Polygon
 import numpy as np
 
-import pandas as pd
 
-mesh_250 = pd.read_csv("../final_code/data/mesh_quarter_features.csv").dropna()
-############################
-
-#mesh_250 = pd.read_csv("mesh_quarter_features.csv").dropna()
-price_index = pd.read_csv("../final_code/data/mesh_quarterly_price_index.csv")
+mesh_250 = pd.read_csv("../data/mesh_quarter_features.csv").dropna()
+# mesh_250 = pd.read_csv("mesh_quarter_features.csv").dropna()
+price_index = pd.read_csv("../data/mesh_quarterly_price_index.csv")
 
 price_index["Mesh250m"] = price_index["Mesh250m"].astype(str)
 mesh_250["Mesh250m"] = mesh_250["Mesh250m"].astype(str)
@@ -37,4 +33,4 @@ def make_square(lat, lon, half_m=125):
 df["geometry"] = df.apply(lambda r: make_square(r["Latitude"], r["Longitude"]), axis=1)
 gdf = gpd.GeoDataFrame(df, geometry="geometry", crs="EPSG:4326")
 gdf.to_file("mesh250_all_quarters.geojson", driver="GeoJSON")
-print("✅ Ready:", len(gdf), "records across", gdf["PeriodKey"].nunique(), "quarters")
+print("Ready:", len(gdf), "records across", gdf["PeriodKey"].nunique(), "quarters")

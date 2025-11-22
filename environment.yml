@@ -82,3 +82,9 @@ dependencies:
   - shap
   - matplotlib
   - lightgbm
+  - scipy
+  - statsmodels
+  - shapely
+
+# Optional: install Torch for the LSTM run separately after the env is created:                                                                                                                                                                                      
+# pip install torch --index-url https://download.pytorch.org/whl/cpu      

@@ -147,7 +147,7 @@ def save_tree_shap_outputs(
         actual,
         float(expected_value),
     )
-    ################################### added for visualisation ###############
+    # Save a SHAP Explanation pickle for the dashboard viewers
     shap_explanation = shap.Explanation(
         values=shap_values,
         base_values=np.full(shap_values.shape[0], expected_value),
@@ -157,7 +157,7 @@ def save_tree_shap_outputs(
     shap_pkl_path = config.OUTPUT_DIR / f"{level_name.lower()}_{model_name.lower()}_{split_name}_shap.pkl"
     with shap_pkl_path.open("wb") as f:
         pickle.dump(shap_explanation, f)
-################################################################################
+
     if "City" in sample.columns:
         for city in sample["City"].dropna().unique():
             city_mask = sample["City"] == city
@@ -254,12 +254,10 @@ def export_linear_shap(
         actual,
         float(expected_value),
     )
-    ##################################
-    #save SHAP Explanation pickle for LinearRegression ===
+    # Save SHAP Explanation pickle for LinearRegression
     shap_pkl_path = config.OUTPUT_DIR / f"{level_name.lower()}_linearregression_{split_name}_shap.pkl"
     with shap_pkl_path.open("wb") as f:
         pickle.dump(shap_values, f)
-    # === END CODE ===
 
     if "City" in eval_df.columns:
         shap_array = getattr(shap_values, "values", shap_values)

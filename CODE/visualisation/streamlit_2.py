@@ -15,18 +15,12 @@ import streamlit.components.v1 as components
 
 BASE_DIR = Path(__file__).resolve().parent
 OUTPUT_DIRS = [
-    BASE_DIR.parent / "outputs",  # when visualisation/ lives inside CODE/
-    BASE_DIR.parent / "CODE" / "outputs",  # when visualisation/ is at repo root
-    BASE_DIR.parent.parent / "CODE" / "outputs",  # when nested inside CODE/visualisation
-    BASE_DIR.parent / "final_code" / "outputs",
-    BASE_DIR.parent.parent / "final_code" / "outputs",
+    BASE_DIR.parent / "outputs",            # expected when inside CODE/
+    BASE_DIR.parent / "CODE" / "outputs",   # if run from repo root
 ]
 DATA_DIRS = [
     BASE_DIR.parent / "data",
     BASE_DIR.parent / "CODE" / "data",
-    BASE_DIR.parent.parent / "CODE" / "data",
-    BASE_DIR.parent / "final_code" / "data",
-    BASE_DIR.parent.parent / "final_code" / "data",
 ]
 
 def _first_existing(paths):
@@ -59,11 +53,9 @@ def st_shap(plot, height=300):
 
 
 st.set_page_config(page_title="Japan Housing Dashboard", layout="wide")
-st.title("🏙️ Japan Housing Dashboard — Mesh-250 m Dynamic Visualization")
+st.title("Japan Housing Dashboard - Mesh-250 m Dynamic Visualization")
 
-# --------------------------
-# City definitions
-# --------------------------
+# city definitions
 TOKYO_WARDS = {f"131{str(i).zfill(2)}" for i in range(1,24)}  # 13101..13123
 SENDAI_WARDS = {"04101","04102","04103","04104","04105"}
 
@@ -78,9 +70,7 @@ CENTER = {
     "Sendai": dict(latitude=38.27, longitude=140.87, zoom=10),
 }
 
-# =====================================================
-# 1) Load or create placeholder mesh data
-# =====================================================
+# load mesh data and predictions
 @st.cache_data
 def load_predictions():
     try:
@@ -88,7 +78,7 @@ def load_predictions():
             raise FileNotFoundError("No outputs directory found.")
         df_pred = pd.read_csv(OUTPUT_DIR / "model_predictions_viz.csv")
     except Exception as e:
-        st.error(f"🚨 Failed to load model_predictions_viz.csv: {e}")
+        st.error(f"Failed to load model_predictions_viz.csv: {e}")
         df_pred = pd.DataFrame(columns=["Model", "PeriodKey", "Mesh250m", "Predicted"])
     return df_pred
 
@@ -121,7 +111,7 @@ df_pred = load_predictions()
 
 # Load model metrics
 if OUTPUT_DIR is None:
-    st.error("Outputs directory not found. Please ensure CODE/outputs or final_code/outputs exists.")
+    st.error("Outputs directory not found. Please ensure CODE/outputs exists.")
     df_results = pd.DataFrame()
 else:
     df_results = pd.read_csv(OUTPUT_DIR / "model_results.csv")
@@ -140,7 +130,7 @@ else:
 # Coverage (based on mesh_quarterly_price_index.csv)
 # =====================================================
 if DATA_DIR is None:
-    st.warning("Data directory not found. Please ensure CODE/data or final_code/data exists.")
+    st.warning("Data directory not found. Please ensure CODE/data exists.")
     coverage, total, coverage_pct = 0, 0, 0
 else:
     try:
@@ -154,12 +144,12 @@ else:
         coverage, total, coverage_pct = 0, 0, 0
 
 
-#Sidebar Controls
+# sidebar controls
 
-st.sidebar.title("🏠 Japan Housing Forecast")
+st.sidebar.title("Japan Housing Forecast")
 st.sidebar.write(f"**Data Coverage (Mesh250m)**")
 st.sidebar.write(f"{coverage_pct:.1f}({coverage}/{total})%")
-st.sidebar.caption("Mesh-250 m granularity · Tokyo · Sendai")
+st.sidebar.caption("Mesh-250 m granularity - Tokyo / Sendai")
 
 city = st.sidebar.selectbox("Select City", ["Tokyo", "Sendai"])
 # Dynamically populate model list
@@ -186,7 +176,7 @@ show_leaderboard = st.sidebar.checkbox("Show Leaderboard", value=True)
 
 
 
-# Display leaderboard
+# display leaderboard
 
 if show_leaderboard:
     st.subheader("Model Leaderboard")
@@ -243,7 +233,7 @@ def filter_city(frame: gpd.GeoDataFrame, city_name: str) -> gpd.GeoDataFrame:
     ]
 
 
-# Render one map frame for (city, period, model)
+# render one map frame for (city, period, model)
 def render_period(city_name: str, period_key: str, model_name: str):
     # Filter base mesh data for that quarter + city
     frame = gdf[gdf["PeriodKey"] == period_key].copy()
@@ -297,7 +287,7 @@ def render_period(city_name: str, period_key: str, model_name: str):
     geojson = json.loads(frame.to_json())
     max_val = frame[metric].max() or 1e-6  # Avoid div-by-zero
 
-    # Green (cheap) → Red (expensive)
+    # Green (cheap) to Red (expensive)
     color_expr = f"[255*(properties.{metric}/{max_val}), 255*(1 - properties.{metric}/{max_val}), 0]"
 
     layer = pdk.Layer(
@@ -316,9 +306,9 @@ def render_period(city_name: str, period_key: str, model_name: str):
         "html": (
             "<b>Mesh ID:</b> {Mesh250m}<br>"
             "<b>Quarter:</b> {PeriodKey}<br>"
-            "<b>Predicted Median ¥/m²:</b> {Predicted_str}<br>"
-            "<b>Actual Median ¥/m²:</b> {mesh_median_ppsqm_str}<br>"
-            "<b>Mean ¥/m²:</b> {mesh_mean_ppsqm_str}<br>"
+            "<b>Predicted Median JPY/m^2:</b> {Predicted_str}<br>"
+            "<b>Actual Median JPY/m^2:</b> {mesh_median_ppsqm_str}<br>"
+            "<b>Mean JPY/m^2:</b> {mesh_mean_ppsqm_str}<br>"
             "<b>Avg Age:</b> {mesh_avg_age_str}<br>"
             "<b>Avg Area:</b> {mesh_avg_area_str}<br>"
             "<b>Price Index:</b> {PriceIndex_str}"
@@ -330,7 +320,7 @@ def render_period(city_name: str, period_key: str, model_name: str):
     st.pydeck_chart(deck)
 
 
-# Main Layout — Map + Right Panels
+# main layout - map + right panels
 map_col, right_col = st.columns([1.6, 1])
 
 st.subheader("Mesh-250 m Dynamic Map")
@@ -405,7 +395,7 @@ with right_col:
         st.pyplot(fig_dep, clear_figure=True)
 # Local SHAP Explanations for Mesh-250m
 st.markdown("---")
-st.subheader("🔍 Local SHAP Explanations — Mesh-250 m")
+st.subheader("Local SHAP Explanations - Mesh-250 m")
 
 shap_exp_local = load_mesh_shap_explanation(model)
 if shap_exp_local is None:
